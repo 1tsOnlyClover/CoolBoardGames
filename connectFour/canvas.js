@@ -33,5 +33,3 @@ connectFourCanvas.addEventListener('click', function(e) {
         console.log("Added token to column 6");
     }
 });
-
-// ctx.clearRect(0, 0, connectFourCanvas.width, connectFourCanvas.height);

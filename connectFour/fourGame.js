@@ -1,3 +1,51 @@
+const connectFourCanvas = document.getElementById("fourCanvas");
+const ctx = connectFourCanvas.getContext("2d");
+let turn = 1;
+
+function getCursorPosition(canvas, event) {
+    const rect = canvas.getBoundingClientRect()
+    const x = event.clientX - rect.left
+    const y = event.clientY - rect.top
+    console.log("x: " + x + " y: " + y)
+    return { x: x, y: y }
+}
+
+function changeTurn() {
+    turn = turn*-1;
+}
+
+
+connectFourCanvas.addEventListener('click', function(e) {
+    const pos = getCursorPosition(connectFourCanvas, e)
+    console.log("Cursor Position: ", pos)
+    console.log(pos.x, pos.y)
+    if (pos.x < 100) {
+        placePieceBoard(turn, 0);
+        console.log("Added token to column 0");
+    } else if (pos.x < 200) {
+        placePieceBoard(turn, 1);
+        console.log("Added token to column 1");
+    } else if (pos.x < 300) {
+        placePieceBoard(turn, 2);
+        console.log("Added token to column 2");
+    } else if (pos.x < 400) {
+        placePieceBoard(turn, 3);
+        console.log("Added token to column 3");
+    } else if (pos.x < 500) {
+        placePieceBoard(turn, 4);
+        console.log("Added token to column 4");
+    } else if (pos.x < 600) {
+        placePieceBoard(turn, 5);
+        console.log("Added token to column 5");
+    } else if (pos.x < 700) {
+        placePieceBoard(turn, 6);
+        console.log("Added token to column 6");
+    }
+    changeTurn();
+    const winner = findWinner();
+    console.log("Winner: ", winner);
+});
+
 
 const board = [
     [0,0,0,0,0,0,0],
@@ -151,8 +199,7 @@ function clearBoard() {
 }
 
 
-const connectFourCanvas = document.getElementById("fourCanvas");
-const ctx = connectFourCanvas.getContext("2d");
+
 
 
 // will clear whatever is currently displayed and will clear the logical board, it will also set up the display 
@@ -174,7 +221,15 @@ function setupBoard() {
 
 // will call addToken function to add a peice to the logical board, it will then fill in the correct space on the display for the token, it will return the winning player
 function placePieceBoard(type,colIndex) {
+    if (findWinner() != 0) {
+        setupBoard();
+        return findWinner();
+    }
     const rowIndex = addToken(type,colIndex);
+    if (rowIndex < 0) {
+        changeTurn();
+        return findWinner();
+    }
     ctx.fillStyle = (type == 1 ? "red" : "yellow");
     ctx.beginPath()
     ctx.arc(50 + (colIndex * 100), 50 + (rowIndex * 100), 40, 0, 2 * Math.PI);
