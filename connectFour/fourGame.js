@@ -21,7 +21,7 @@ function printBoard() { // tool to log the current board state in the console
     console.log(boardText)
 }
 
-function addToken(type,colIndex) { // will place a peice of the given type in the given col
+function addToken(type,colIndex) { // will place a peice of the given type in the given col, will return the row index the peice fell to
     let rowIndex = board.length - 1;
     try {
         while (true) {
@@ -141,6 +141,7 @@ function findAscWin() {
     return 0;
 }
 
+// will clear the board variable that represents the board logically
 function clearBoard() {
     for (let row = 0; row < board.length; row++) {
         for (let col = 0; col < board[row].length; col++) {
@@ -154,7 +155,7 @@ const connectFourCanvas = document.getElementById("fourCanvas");
 const ctx = connectFourCanvas.getContext("2d");
 
 
-
+// will clear whatever is currently displayed and will clear the logical board, it will also set up the display 
 function setupBoard() {
     clearBoard();
     ctx.clearRect(0,0,connectFourCanvas.width,connectFourCanvas.height)
@@ -171,6 +172,7 @@ function setupBoard() {
     }
 }
 
+// will call addToken function to add a peice to the logical board, it will then fill in the correct space on the display for the token, it will return the winning player
 function placePieceBoard(type,colIndex) {
     const rowIndex = addToken(type,colIndex);
     ctx.fillStyle = (type == 1 ? "red" : "yellow");
@@ -181,4 +183,4 @@ function placePieceBoard(type,colIndex) {
     return findWinner();
 }
 
-setupBoard();
+setupBoard(); // initially set up the board
