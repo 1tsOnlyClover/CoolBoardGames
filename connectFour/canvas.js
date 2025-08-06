@@ -17,30 +17,21 @@ connectFourCanvas.addEventListener('click', function(e) {
     const pos = getCursorPosition(connectFourCanvas, e)
     console.log("Cursor Position: ", pos)
     console.log(pos.x, pos.y)
-    switch (pos.x) {
-        case pos.x < 100:
-            console.log("Added token to column 0");
-            // break;
-        case pos.x < 200:
-            console.log("Added token to column 1");
-            // break;
-        case pos.x < 300:
-            console.log("Added token to column 2");
-            // break;
-        case pos.x < 400:
-            console.log("Added token to column 3");
-            // break;
-        case pos.x < 500:
-            console.log("Added token to column 4");
-            // break;
-        case pos.x < 600:
-            console.log("Added token to column 5");
-            // break;
-        case pos.x < 700:
-            console.log("Added token to column 6");
-            // break;
+    if (pos.x < 100) {
+        console.log("Added token to column 0");
+    } else if (pos.x < 200) {
+        console.log("Added token to column 1");
+    } else if (pos.x < 300) {
+        console.log("Added token to column 2");
+    } else if (pos.x < 400) {
+        console.log("Added token to column 3");
+    } else if (pos.x < 500) {
+        console.log("Added token to column 4");
+    } else if (pos.x < 600) {
+        console.log("Added token to column 5");
+    } else if (pos.x < 700) {
+        console.log("Added token to column 6");
     }
-})
-
+});
 
 // ctx.clearRect(0, 0, connectFourCanvas.width, connectFourCanvas.height);
