@@ -27,11 +27,12 @@ function addToken(type,colIndex) { // will place a peice of the given type in th
         while (true) {
             if (board[rowIndex][colIndex] == 0) {
                 board[rowIndex][colIndex] = type;
-                return;
+                return rowIndex;
             }
             rowIndex--;
         }
     } catch {}
+    return -1;
 }
 
 // searches the board to find 4 in a row, will return 1 or -1 depending on who won or 0 if there is no winner
@@ -149,3 +150,35 @@ function clearBoard() {
 }
 
 
+const connectFourCanvas = document.getElementById("fourCanvas");
+const ctx = connectFourCanvas.getContext("2d");
+
+
+
+function setupBoard() {
+    clearBoard();
+    ctx.clearRect(0,0,connectFourCanvas.width,connectFourCanvas.height)
+    ctx.fillStyle = "blue";
+    ctx.fillRect(0,0,connectFourCanvas.width,connectFourCanvas.height);
+    ctx.fillStyle = "white";
+    for (let row = 0; row < board.length; row++) {
+        for (let col = 0; col < board[row].length; col++) {
+            ctx.beginPath();
+            ctx.arc(50 + (100 * col), 50 + (100 * row), 40, 0, 2 * Math.PI);
+            ctx.fill();
+            ctx.stroke();
+        }
+    }
+}
+
+function placePieceBoard(type,colIndex) {
+    const rowIndex = addToken(type,colIndex);
+    ctx.fillStyle = (type == 1 ? "red" : "yellow");
+    ctx.beginPath()
+    ctx.arc(50 + (colIndex * 100), 50 + (rowIndex * 100), 40, 0, 2 * Math.PI);
+    ctx.fill();
+    ctx.stroke();
+    return findWinner();
+}
+
+setupBoard();
