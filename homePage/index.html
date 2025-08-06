@@ -7,31 +7,53 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <!-- Header -->
     <header>
         <h1>Welcome to Cool Board Games</h1>
-        <h2>Your one-stop destination for classic board games</h2>
-        <h3>This is mostly just here so the styler can do work while an actual page is being created.</h3>
-        <nav>
+        <h2>Your one-stop destination for classic Board Games!</h2>
+        <!-- Logo -->
+        <img src="logo.png" width="350" height="175" alt="Cool Board Games Logo" class="logo">
+
+        <section class="site-intro">
+            <h2>What is Cool Board Games?</h2>
+            <p>Cool Board Games is your one-stop destination for timeless classics and new favorites. We feature fun, strategic, and competitive games you can enjoy with friends and family. Each game comes with instructions, tips, and an interactive digital version to play!</p>
+        </section>
+
+        <section class="why-us">
+            <h2>Why Play at Cool Board Games?</h2>
             <ul>
-                <li><a href="index.html">Home</a></li>
-                <li><a href="../connectFour/connectFour.html">Connect Four</a></li>
+                <li>🎮 Free browser-based games</li>
+                <li>👨‍👩‍👧‍👦 Great for all ages</li>
+                <li>🧠 Encourages strategic thinking</li>
+                <li>🚫 No downloads or sign-ups needed</li>
             </ul>
-        </nav>
-    </header>
+        </section>
+
+    <!-- Main Body -->
     <main>
-        <section>
+        <section class="featured-games">
             <h2>Featured Games</h2>
             <ul>
-                <li>Connect Four</li>
-                <li>Game 2</li>
-                <li>Game 3</li>
+                <li>
+                    <div class="game-item">
+                        <h3>Connect Four</h3>
+                        <p>Line up four discs in a row before your opponent.</p>
+                        <a href="../connectFour/connectFour.html" class="clickable-image">
+                            <img src="pathToConnectFourLogo.jpg" alt="Connect Four Clickable Image">
+                        </a>
+                    </div>
+                </li>
+                <li>
+                    Game 2
+                </li>
+                <li>
+                    Game 3
+                </li>
             </ul>
-            <p>paragraph to demonstrate styling</p>
-            <div class="container">
-                <p>Some content inside the container and an image below to style</p>
-                <img src="OhareBlimpForImageStyling.png" alt="O'Hare Blimp">
-            </div>
         </section>
+
+        <!-- Could have a game of the day section here if time allows -->
+        <canvas id="gameCanvas" width="200" height="200" style="border:1px solid #000;"></canvas>
     </main>
     <footer>
         <p>&copy; 2025 Cool Board Games</p>
