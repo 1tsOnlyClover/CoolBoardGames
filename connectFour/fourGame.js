@@ -226,10 +226,6 @@ function placePieceBoard(type,colIndex) {
         return findWinner();
     }
     const rowIndex = addToken(type,colIndex);
-    if (rowIndex < 0) {
-        changeTurn();
-        return findWinner();
-    }
     ctx.fillStyle = (type == 1 ? "red" : "yellow");
     ctx.beginPath()
     ctx.arc(50 + (colIndex * 100), 50 + (rowIndex * 100), 40, 0, 2 * Math.PI);
