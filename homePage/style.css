@@ -1,0 +1,22 @@
+html {
+    outline: auto;
+    outline-color:red;
+    outline-style: outset;
+    background-color: black;
+    margin-left: 10%;
+    margin-right: 10%;
+}
+header{
+    text-align: center;
+    color:aliceblue
+}
+ul{
+    text-align: center;
+    list-style-position: inside;
+}
+main{
+    outline: auto;
+    outline-color: red;
+    outline-style: inset;
+    outline-width: 4px;
+}
