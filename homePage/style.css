@@ -1,12 +1,35 @@
 html {
     outline: auto;
     outline-color:red;
-    outline-style: outset;
+    outline-style: solid;
     background-color: black;
     margin-left: 10%;
     margin-right: 10%;
 }
-header{
+.site-intro {
+    outline: auto;
+    outline-color: red;
+    outline-style: solid;
+}
+.why-us{
+    outline: auto;
+    outline-color: chartreuse;
+    outline-style: solid;
+}
+
+.game-item{
+    text-decoration-line: underline;
+    color: rgb(71, 157, 255);
+}
+
+.clickable-image{
+    outline: auto;
+    outline-style: solid;
+    outline-width: 3px;
+    outline-color: gray;
+}
+
+header{ 
     text-align: center;
     color:aliceblue
 }
@@ -17,6 +40,6 @@ ul{
 main{
     outline: auto;
     outline-color: red;
-    outline-style: inset;
+    outline-style: solid;
     outline-width: 4px;
 }
