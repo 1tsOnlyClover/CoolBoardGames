@@ -22,6 +22,10 @@ html {
     color: rgb(71, 157, 255);
 }
 
+#gotd li {
+    list-style-type: none;
+}
+
 .clickable-image{
     outline: auto;
     outline-style: solid;
