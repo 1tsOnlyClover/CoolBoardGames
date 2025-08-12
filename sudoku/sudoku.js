@@ -20,7 +20,7 @@ sudokuCanvas.addEventListener('click', function(e) {
     console.log(pos.x, pos.y)
     determineCol();
     determineRow();
-    placeNumberBoard(rowClicked, colClicked);
+    placeNumberBoard(rowClicked, colClicked, Math.floor(Math.random() * 9) + 1);
 });
 
 function determineCol() {
@@ -82,7 +82,6 @@ const board = [
 // 0 will be an unfilled space
 // board[row][column]
 
-
 function printBoard() { // tool to log the current board state in the console
     let boardText = "";
     for (let row = 0; row < board.length; row++) {
@@ -111,7 +110,7 @@ function addToken(type,colIndex) { // will place a peice of the given type in th
 // will clear the board variable that represents the board logically
 function clearBoard() {
     for (let row = 0; row < board.length; row++) {
-        for (let col = 0; col < board[row].length; col++) {
+        for (let col = 0; col < board.length; col++) {
             board[row][col] = 0;
         }
     }
@@ -124,7 +123,7 @@ function setupBoard() {
     ctx.fillStyle = "black";
     ctx.fillRect(0,0,sudokuCanvas.width,sudokuCanvas.height);
     for (let row = 0; row < board.length; row++) {
-        for (let col = 0; col < board[row].length; col++) {
+        for (let col = 0; col < board.length; col++) {
             if((col + row) % 2 == 0) {
                 ctx.fillStyle = "#e0a04bff";
             } else if(ctx.fillStyle != "#7d4f12ff") {
@@ -134,14 +133,55 @@ function setupBoard() {
             ctx.stroke();
         }
     }
+    fillBoard();
+    printBoard();
+    for (let row = 0; row < board.length; row++) {
+        for (let col = 0; col < board.length; col++) {
+            if (board[row][col] != 0) {
+                placeNumberBoard(row, col, board[row][col]);
+            }
+        }
+    }
 }
 
 
-function placeNumberBoard(rowIndex,colIndex) {
+function placeNumberBoard(rowIndex,colIndex,number) {
     ctx.fillStyle = "black";
-    ctx.boardText = Math.floor(Math.random() * 9) + 1;
     ctx.font = "50px Arial";
-    ctx.fillText(ctx.boardText, colIndex * 100 + 35, rowIndex * 100 + 65);
+    ctx.fillText(number, colIndex * 100 + 35, rowIndex * 100 + 65);
 }
 
 setupBoard(); // initially set up the board
+
+function rowValidity(col,number) {
+    // will return true if the number is not already in the row
+    for (let i = 0; i < board[col].length; i++) {
+        if (board[col][i] == number) {
+            return false;
+        }
+    }
+    return true;
+}
+
+function colValidity(row,number) {
+    // will return true if the number is not already in the column
+    for (let i = 0; i < board.length; i++) {
+        if (board[i][row] == number) {
+            return false;
+        }
+    }
+    return true;
+}
+
+
+function fillBoard() {
+    for (let row = 0; row < 9; row++) {
+        for (let col = 0; col < 9; col++) {
+            let num = 0;
+            do {
+                num = Math.floor(Math.random() * 9) + 1;
+            } while (!rowValidity(row, num) || !colValidity(col, num))
+            board[row][col] = num;
+        }
+    }
+}
