@@ -13,7 +13,7 @@ function printBoard() {
     let rowText = "";
     for (let row = 0; row < board.length; row++) {
         for (let col = 0; col < board[row].length; col++) {
-            rowText += (board[row][col] == -1 ? "" : " ") + board[row][col] + " ";
+            rowText += (board[row][col] < 0 ? "" : " ") + board[row][col] + " ";
         }
         rowText += "\n";
     }
@@ -67,16 +67,13 @@ function movePiece(x,y,X,Y) {
     board[x][y] = 0;
     board[X][Y] = piece;
 
-    const type = Math.abs(piece);
-    if (type == 1) {
-        if (piece == 1) {
-            if (X == board.length - 1) {
-                board[X][Y] == 2;
-            }
-        } else if (piece == -1) {
-            if (X == 0) {
-                board[X][Y] == -2;
-            }
+    if (piece == 1) {
+        if (X == board.length - 1) {
+            board[X][Y] = 2;
+        }
+    } else if (piece == -1) {
+        if (X == 0) {
+            board[X][Y] = -2;
         }
     }
 }
@@ -85,21 +82,21 @@ function getSign(num) {
     return Math.abs(num) / num;
 }
 
-function checkMove(originX, originY, sign, shiftY, onlyCapture) {
+function checkMove(originX, originY, sign, shiftX, shiftY, onlyCapture) {
     try {
-        const spaceType = board[originX + sign][originY + shiftY];
+        const spaceType = board[originX + shiftX][originY + shiftY];
         if (spaceType == undefined) {
             return null;
         }
         if ((spaceType == 0) && (!onlyCapture)) {
-            return new Move(originX, originY, originX + sign, originY + shiftY, false, -1, -1);
+            return new Move(originX, originY, originX + shiftX, originY + shiftY, false, -1, -1);
         } else if (getSign(spaceType) == sign * -1) {
-            const spaceTypeJump = board[originX + sign + sign][originY + shiftY + shiftY];
+            const spaceTypeJump = board[originX + shiftX + shiftX][originY + shiftY + shiftY];
             if (spaceTypeJump == undefined) {
                 return null;
             }
             if (spaceTypeJump == 0) {
-                return new Move(originX, originY, originX + sign + sign, originY + shiftY + shiftY, true, originX + sign, originY + shiftY);
+                return new Move(originX, originY, originX + shiftX + shiftX, originY + shiftY + shiftY, true, originX + shiftX, originY + shiftY);
             }
         } else {
             return null;
@@ -117,8 +114,8 @@ function getMoves(originX, originY, onlyCapture) {
     let moves = [];
 
     if (type == 1 || type == 2) {
-        const move1 = checkMove(originX, originY, sign, 1, onlyCapture);
-        const move2 = checkMove(originX, originY, sign, -1, onlyCapture);
+        const move1 = checkMove(originX, originY, sign, sign,  1, onlyCapture);
+        const move2 = checkMove(originX, originY, sign, sign, -1, onlyCapture);
         if (move1 != null) {
             moves.push(move1);
         }
@@ -127,8 +124,8 @@ function getMoves(originX, originY, onlyCapture) {
         }
     } 
     if (type == 2) {
-        const move3 = checkMove(originX, originY, sign * -1, 1, onlyCapture);
-        const move4 = checkMove(originX, originY, sign * -1, -1, onlyCapture);
+        const move3 = checkMove(originX, originY,sign, sign * -1, 1, onlyCapture);
+        const move4 = checkMove(originX, originY, sign, sign * -1, -1, onlyCapture);
         if (move3 != null) {
             moves.push(move3);
         }
@@ -136,5 +133,5 @@ function getMoves(originX, originY, onlyCapture) {
             moves.push(move4);
         }
     }
-    return moves
+    return moves;
 }
