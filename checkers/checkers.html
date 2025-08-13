@@ -1,11 +1,39 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <meta name= "viewport" content="width=device-width, initial-scale=1.0">
         <meta charset="UTF-8">
+        <meta name="description" content="checkers Game">
+        <meta name="keywords" content="Checkers, Game">
+        <meta name="author" content="The Something Group">
+        <title>Checkers</title>
         <link rel="stylesheet" href="checkersStyle.css">
     </head>
+    <body>
+    <header role="banner">
+        <div class="container">
+            <h1>Checkers</h1>
+            <div id="game-board"></div>
+        </div>
+    </header>
+    </body>
     <body>
         <canvas id="board" height="800" width="800"></canvas>
     </body>
     <script src="checkersGame.js"></script>
+    <main>
+        <div class="container">
+            <div class="reset">
+                <button id="reset-button">Reset Game</button>
+            </div>
+        </div>
+        <div class="game rules">
+            <h2>Game Rules</h2>
+            <ul>
+                <li>Players take turns moving their pieces diagonally on the dark squares.</li>
+                <li>Capturing an opponent's piece is done by jumping over it to an empty square.</li>
+                <li>The game ends when a player captures all of the opponent's pieces or blocks them from moving.</li>
+            </ul>
+        </div>
+    </main>
 </html>
