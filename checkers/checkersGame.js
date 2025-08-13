@@ -9,6 +9,9 @@ board = [
     [-1, 0,-1, 0,-1, 0,-1, 0]
 ];
 
+const checkersCanvas = document.getElementById("board");
+const ctx = checkersCanvas.getContext("2d");
+
 function printBoard() {
     let rowText = "";
     for (let row = 0; row < board.length; row++) {
@@ -135,3 +138,84 @@ function getMoves(originX, originY, onlyCapture) {
     }
     return moves;
 }
+
+function setupBlank() {
+    ctx.clearRect(0,0,checkersCanvas.width,checkersCanvas.height);
+    ctx.fillStyle = "black";
+    ctx.fillRect(0,0,checkersCanvas.width,checkersCanvas.height);
+    for (let row = 0; row < board.length; row++) {
+        for (let col = 0; col < board.length; col++) {
+            if((col + row) % 2 == 0) {
+                ctx.fillStyle = "#e0a04bff";
+            } else if(ctx.fillStyle != "#7d4f12ff") {
+                ctx.fillStyle = "#7d4f12ff";
+            }
+            ctx.fillRect((100 * col), (100 * row), 100, 100);
+            ctx.stroke();
+        }
+    }
+}
+
+function displayPeices() {
+    for (let row = 0; row < board.length; row++) {
+        for (let col = 0; col < board[row].length; col++) {
+            if (board[row][col] != 0) {
+                const sign = getSign(board[row][col]);
+                const type = Math.abs(board[row][col]);
+                ctx.fillStyle = (sign == 1 ? "#cb0000ff" : "#2f2f2fff");
+                ctx.beginPath();
+                ctx.arc(50 + (col * 100), 50 + (row * 100), 40, 0, 2 * Math.PI);
+                ctx.fill();
+                ctx.stroke();
+                if (type == 2) {
+                    ctx.fillStyle = (sign == 1 ? "#5a0000ff" : "#757575ff");
+                    ctx.beginPath();
+                    ctx.arc(50 + (col * 100), 50 + (row * 100), 20, 0, 2 * Math.PI);
+                    ctx.fill();
+                    ctx.stroke();
+                }
+            }
+        }
+    }
+}
+
+function highlightMoves(moves) {
+    for (let i = 0; i < moves.length; i++) {
+        const row = moves[i].destinationX;
+        const col = moves[i].destinationY;
+
+        ctx.beginPath();
+        ctx.strokeStyle = "#0fcf2fff";
+        ctx.moveTo(100 * col, 100 * row);
+        ctx.lineTo((100 * col) + 100, (100 * row));
+        ctx.lineTo((100 * col) + 100, (100 * row) + 100);
+        ctx.lineTo((100 * col), (100 * row) + 100);
+        ctx.lineTo((100 * col), (100 * row));
+
+        ctx.lineWidth = 5;
+        ctx.stroke();
+    }
+    if (moves.length != 0) {
+        const row = moves[0].originX;
+        const col = moves[0].originY;
+        
+        ctx.beginPath();
+        ctx.strokeStyle = "#250fcfff";
+        ctx.moveTo(100 * col, 100 * row);
+        ctx.lineTo((100 * col) + 100, (100 * row));
+        ctx.lineTo((100 * col) + 100, (100 * row) + 100);
+        ctx.lineTo((100 * col), (100 * row) + 100);
+        ctx.lineTo((100 * col), (100 * row));
+
+        ctx.lineWidth = 5;
+        ctx.stroke();
+    }
+}
+
+function displayBoard(moves) {
+    setupBlank();
+    displayPeices();
+    highlightMoves(moves);
+}
+
+displayBoard([]);
