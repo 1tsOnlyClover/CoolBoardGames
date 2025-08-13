@@ -82,6 +82,9 @@ function movePiece(x,y,X,Y) {
 }
 
 function getSign(num) {
+    if (num == 0) {
+        return 0;
+    }
     return Math.abs(num) / num;
 }
 
@@ -213,9 +216,68 @@ function highlightMoves(moves) {
 }
 
 function displayBoard(moves) {
+    ctx.strokeStyle = "black";
+    ctx.lineWidth = 1;
     setupBlank();
     displayPeices();
     highlightMoves(moves);
 }
+
+function getCursorPosition(canvas, event) {
+    const rect = canvas.getBoundingClientRect();
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
+    return { x: x, y: y };
+}
+
+let turn = 1;
+let waitingForMove = false;
+let currentMoves = [];
+let tookPeice = false;
+
+checkersCanvas.addEventListener('click', function(e) {
+    const pos = getCursorPosition(checkersCanvas, e);
+    const row = Math.floor(pos.y / 100);
+    const col = Math.floor(pos.x / 100);
+    if (waitingForMove) {
+        let clickedMove = null;
+        for (let i = 0; i < currentMoves.length; i++) {
+            if (currentMoves[i].destinationX == row && currentMoves[i].destinationY == col) {
+                clickedMove = currentMoves[i];
+            }
+        }
+        if (clickedMove == null) {
+            waitingForMove = false;
+            currentMoves = [];
+            if (tookPeice) {
+                turn *= -1;
+                tookPeice = false;
+            }
+        } else {
+            tookPeice = clickedMove.captured;
+            clickedMove.move();
+            if (!tookPeice) {
+                turn *= -1;
+                waitingForMove = false;
+                currentMoves = [];
+            } else {
+                currentMoves = [];
+                currentMoves = getMoves(clickedMove.destinationX,clickedMove.destinationY,true);
+                if (currentMoves.length == 0) {
+                    tookPeice = false;
+                    waitingForMove = false;
+                    turn *= -1;
+                }
+            }
+        }
+    } else {
+        if (getSign(board[row][col]) == turn) {
+            waitingForMove = true;
+            currentMoves = []
+            currentMoves = getMoves(row,col,false);
+        }
+    }
+    displayBoard(currentMoves);
+});
 
 displayBoard([]);
