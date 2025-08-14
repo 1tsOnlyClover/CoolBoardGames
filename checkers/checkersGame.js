@@ -234,8 +234,63 @@ let turn = 1;
 let waitingForMove = false;
 let currentMoves = [];
 let tookPeice = false;
+let ended = false;
+
+function checkForWin() {
+    let foundPositiveMove = false;
+    let foundNegitiveMove = false;
+    for (let row = 0; row < board.length; row++) {
+        for (let col = 0; col < board[row].length; col++) {
+            if (getSign(board[row][col]) == 1) {
+                if (getMoves(row,col,false).length != 0) {
+                    foundPositiveMove = true;
+                }
+            } else if (getSign(board[row][col]) == -1) {
+                if (getMoves(row,col,false).length != 0) {
+                    foundNegitiveMove = true;
+                }
+            }
+        }
+    }
+    if (foundPositiveMove && foundNegitiveMove) {
+        return null;
+    }
+    if (foundPositiveMove) {
+        return 1;
+    }
+    if (foundNegitiveMove) {
+        return -1;
+    }
+    return 0;
+}
+
+function displayWin(winType) {
+    if (winType == 1) {
+        ctx.font = "80px Arial";
+        ctx.fillStyle = "red";
+        ctx.fillText("Red Won", 200, 400);
+    } else if (winType == -1) {
+        ctx.font = "80px Arial";
+        ctx.fillStyle = "black";
+        ctx.fillText("Black Won", 200, 400);
+    } else {
+        ctx.font = "80px Arial";
+        ctx.fillStyle = "blue";
+        ctx.fillText("Nobody Won", 200, 400);
+    }
+}
 
 checkersCanvas.addEventListener('click', function(e) {
+    if (ended) {
+        turn = 1;
+        waitingForMove = false;
+        currentMoves = [];
+        tookPeice = false;
+        ended = false;
+        resetBoard();
+        displayBoard([]);
+        return;
+    }
     const pos = getCursorPosition(checkersCanvas, e);
     const row = Math.floor(pos.y / 100);
     const col = Math.floor(pos.x / 100);
@@ -278,6 +333,11 @@ checkersCanvas.addEventListener('click', function(e) {
         }
     }
     displayBoard(currentMoves);
+    const winCondition = checkForWin();
+    if (winCondition != null) {
+        ended = true;
+        displayWin(winCondition);
+    }
 });
 
 displayBoard([]);
