@@ -14,6 +14,18 @@ function changeTurn() {
     turn = turn*-1;
 }
 
+function displayWin(winType) {
+    if (winType == 1) {
+        ctx.font = "80px Arial";
+        ctx.fillStyle = "black";
+        ctx.fillText("Red Won", 150, 300);
+    } else if (winType == -1) {
+        ctx.font = "80px Arial";
+        ctx.fillStyle = "black";
+        ctx.fillText("Yellow Won", 150, 300);
+    }
+}
+
 
 connectFourCanvas.addEventListener('click', function(e) {
     const pos = getCursorPosition(connectFourCanvas, e)
@@ -44,6 +56,7 @@ connectFourCanvas.addEventListener('click', function(e) {
     changeTurn();
     const winner = findWinner();
     console.log("Winner: ", winner);
+    displayWin(winner);
 });
 
 
@@ -230,11 +243,16 @@ function placePieceBoard(type,colIndex) {
         changeTurn();
         return findWinner();
     }
-    ctx.fillStyle = (type == 1 ? "red" : "yellow");
-    ctx.beginPath()
-    ctx.arc(50 + (colIndex * 100), 50 + (rowIndex * 100), 40, 0, 2 * Math.PI);
-    ctx.fill();
-    ctx.stroke();
+    const image = new Image();
+    image.src = (type == 1 ? "redToken.png" : "yellowToken.png");
+    image.onload = function() {
+        ctx.drawImage(image, (colIndex * 100) + 10, (rowIndex * 100) + 10);
+    };
+    // ctx.fillStyle = (type == 1 ? "red" : "yellow");
+    // ctx.beginPath()
+    // ctx.arc(50 + (colIndex * 100), 50 + (rowIndex * 100), 40, 0, 2 * Math.PI);
+    // ctx.fill();
+    // ctx.stroke();
     return findWinner();
 }
 
