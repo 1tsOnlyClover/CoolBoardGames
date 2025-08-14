@@ -6,7 +6,7 @@ function getCursorPosition(canvas, event) {
     const rect = canvas.getBoundingClientRect()
     const x = event.clientX - rect.left
     const y = event.clientY - rect.top
-    console.log("x: " + x + " y: " + y)
+    // console.log("x: " + x + " y: " + y)
     return { x: x, y: y }
 }
 
@@ -14,24 +14,27 @@ let colClicked = 0;
 let rowClicked = 0;
 let pos = { x: 0, y: 0 };
 let userNumber = 0;
+let input;
 
 sudokuCanvas.addEventListener('click', function(e) {
     pos = getCursorPosition(sudokuCanvas, e)
-    console.log("Cursor Position: ", pos)
-    console.log(pos.x, pos.y)
+    // console.log("Cursor Position: ", pos)
+    // console.log(pos.x, pos.y)
     determineCol();
     determineRow();
-    let userInput = addInput();
-    console.log(userInput);
+    if (input === undefined) {
+        let userInput = addInput();
+        // console.log(userInput);
+    }
 });
 
 function addInput() {
-    let input = document.createElement('input');
+    input = document.createElement('input');
 
     input.type = 'text';
-    input.style.position = 'fixed';
+    input.style.position = 'absolute';
     input.style.left = (colClicked * 100 + 50) + 'px';
-    input.style.top = (rowClicked * 100 + 50) + 'px';
+    input.style.top = (rowClicked * 100 + 120) + 'px';
     input.style.width = '10px';
     input.onkeydown = determineNumEntered;
     document.body.appendChild(input);
@@ -39,47 +42,73 @@ function addInput() {
 
 function determineNumEntered(e) {
     let keyCode = e.keyCode; //48 to 57 and 96 to 105
-    if (keyCode === 48 || keyCode === 96) {
+    if (keyCode === 49 || keyCode === 97) {
         document.body.removeChild(this);
-        userNumber = 0;
-        fillSpaceNumber(rowClicked, colClicked, userNumber);
-    } else if (keyCode === 49 || keyCode === 97) {
-        document.body.removeChild(this);
+        input = undefined;
         userNumber = 1;
         fillSpaceNumber(rowClicked, colClicked, userNumber);
     } else if (keyCode === 50 || keyCode === 98) {
         document.body.removeChild(this);
+        input = undefined;
         userNumber = 2;
         fillSpaceNumber(rowClicked, colClicked, userNumber);
     } else if (keyCode === 51 || keyCode === 99) {
         document.body.removeChild(this);
+        input = undefined;
         userNumber = 3;
         fillSpaceNumber(rowClicked, colClicked, userNumber);
     } else if (keyCode === 52 || keyCode === 100) {
         document.body.removeChild(this);
+        input = undefined;
         userNumber = 4;
         fillSpaceNumber(rowClicked, colClicked, userNumber);
     } else if (keyCode === 53 || keyCode === 101) {
         document.body.removeChild(this);
+        input = undefined;
         userNumber = 5;
         fillSpaceNumber(rowClicked, colClicked, userNumber);
     } else if (keyCode === 54 || keyCode === 102) {
         document.body.removeChild(this);
+        input = undefined;
         userNumber = 6;
         fillSpaceNumber(rowClicked, colClicked, userNumber);
     } else if (keyCode === 55 || keyCode === 103) {
         document.body.removeChild(this);
+        input = undefined;
         userNumber = 7;
         fillSpaceNumber(rowClicked, colClicked, userNumber);
     } else if (keyCode === 56 || keyCode === 104) {
         document.body.removeChild(this);
+        input = undefined;
         userNumber = 8;
         fillSpaceNumber(rowClicked, colClicked, userNumber);
     } else if (keyCode === 57 || keyCode === 105) {
         document.body.removeChild(this);
+        input = undefined;
         userNumber = 9;
         fillSpaceNumber(rowClicked, colClicked, userNumber);
     }
+    if (winCondition()){
+        ctx.fillStyle = "white";
+        ctx.font = "50px Comics Sans MS";
+        ctx.fillText("Good Job!", 350, 465);
+    }
+}
+
+function winCondition() {
+    let identical = true;
+    for (let row = 0; row < boardPlayer.length; row++) {
+        for (let col = 0; col < boardPlayer[row].length; col++) {
+            if (boardPlayer[row][col] !== boardFilling[row][col]) {
+                identical = false;
+                break;
+            }
+        }
+    }
+    if (identical) {
+        return true;
+    }
+    return false;
 }
 
 function determineCol() {
@@ -185,28 +214,25 @@ function printBoard() { // tool to log the current board state in the console
     console.log(boardText)
 }
 
-function addToken(type,colIndex) { // will place a peice of the given type in the given col, will return the row index the peice fell to
-    let rowIndex = board.length - 1;
-    try {
-        while (true) {
-            if (board[rowIndex][colIndex] == 0) {
-                board[rowIndex][colIndex] = type;
-                return rowIndex;
-            }
-            rowIndex--;
-        }
-    } catch {}
-    return -1;
-}
 
 // will clear the board variable that represents the board logically
 function clearBoard() {
     for (let row = 0; row < board.length; row++) {
         for (let col = 0; col < board.length; col++) {
             board[row][col] = 0;
+            boardFilling[row][col] = 0;
+            boardPlayer[row][col] = 0;
         }
     }
 }
+
+document.addEventListener("DOMContentLoaded", function() {
+    const resetBtn = document.getElementById("reset-button");
+    resetBtn.addEventListener("click", function() {
+        clearBoard();
+        setupBoard();
+    });
+});
 
 // will clear whatever is currently displayed and will clear the logical board, it will also set up the display 
 function setupBoard() {
