@@ -13,6 +13,7 @@ function getCursorPosition(canvas, event) {
 let colClicked = 0;
 let rowClicked = 0;
 let pos = { x: 0, y: 0 };
+let userNumber = 0;
 
 sudokuCanvas.addEventListener('click', function(e) {
     pos = getCursorPosition(sudokuCanvas, e)
@@ -20,8 +21,66 @@ sudokuCanvas.addEventListener('click', function(e) {
     console.log(pos.x, pos.y)
     determineCol();
     determineRow();
-    placeNumberBoard(rowClicked, colClicked, Math.floor(Math.random() * 9) + 1);
+    let userInput = addInput();
+    console.log(userInput);
 });
+
+function addInput() {
+    let input = document.createElement('input');
+
+    input.type = 'text';
+    input.style.position = 'fixed';
+    input.style.left = (colClicked * 100 + 50) + 'px';
+    input.style.top = (rowClicked * 100 + 50) + 'px';
+    input.style.width = '10px';
+    input.onkeydown = determineNumEntered;
+    document.body.appendChild(input);
+}
+
+function determineNumEntered(e) {
+    let keyCode = e.keyCode; //48 to 57 and 96 to 105
+    if (keyCode === 48 || keyCode === 96) {
+        document.body.removeChild(this);
+        userNumber = 0;
+        fillSpaceNumber(rowClicked, colClicked, userNumber);
+    } else if (keyCode === 49 || keyCode === 97) {
+        document.body.removeChild(this);
+        userNumber = 1;
+        fillSpaceNumber(rowClicked, colClicked, userNumber);
+    } else if (keyCode === 50 || keyCode === 98) {
+        document.body.removeChild(this);
+        userNumber = 2;
+        fillSpaceNumber(rowClicked, colClicked, userNumber);
+    } else if (keyCode === 51 || keyCode === 99) {
+        document.body.removeChild(this);
+        userNumber = 3;
+        fillSpaceNumber(rowClicked, colClicked, userNumber);
+    } else if (keyCode === 52 || keyCode === 100) {
+        document.body.removeChild(this);
+        userNumber = 4;
+        fillSpaceNumber(rowClicked, colClicked, userNumber);
+    } else if (keyCode === 53 || keyCode === 101) {
+        document.body.removeChild(this);
+        userNumber = 5;
+        fillSpaceNumber(rowClicked, colClicked, userNumber);
+    } else if (keyCode === 54 || keyCode === 102) {
+        document.body.removeChild(this);
+        userNumber = 6;
+        fillSpaceNumber(rowClicked, colClicked, userNumber);
+    } else if (keyCode === 55 || keyCode === 103) {
+        document.body.removeChild(this);
+        userNumber = 7;
+        fillSpaceNumber(rowClicked, colClicked, userNumber);
+    } else if (keyCode === 56 || keyCode === 104) {
+        document.body.removeChild(this);
+        userNumber = 8;
+        fillSpaceNumber(rowClicked, colClicked, userNumber);
+    } else if (keyCode === 57 || keyCode === 105) {
+        document.body.removeChild(this);
+        userNumber = 9;
+        fillSpaceNumber(rowClicked, colClicked, userNumber);
+    }
+}
 
 function determineCol() {
     if (pos.x < 100) {
@@ -116,6 +175,14 @@ function printBoard() { // tool to log the current board state in the console
         boardText += '\n';
     }
     console.log(boardText)
+    boardText = "";
+    for (let row = 0; row < boardPlayer.length; row++) {
+        for (let col = 0; col < boardPlayer[row].length; col++) {
+            boardText += boardPlayer[row][col] + " ";
+        }
+        boardText += '\n';
+    }
+    console.log(boardText)
 }
 
 function addToken(type,colIndex) { // will place a peice of the given type in the given col, will return the row index the peice fell to
@@ -158,15 +225,29 @@ function setupBoard() {
             ctx.stroke();
         }
     }
+    for (let row = 0; row < 3; row++) {
+        for (let col = 0; col < 3; col++) {
+            ctx.beginPath();
+            ctx.strokeStyle = "#000000ff";
+            ctx.moveTo(300 * col, 300 * row);
+            ctx.lineTo((300 * col) + 300, (300 * row));
+            ctx.lineTo((300 * col) + 300, (300 * row) + 300);
+            ctx.lineTo((300 * col), (300 * row) + 300);
+            ctx.lineTo((300 * col), (300 * row));
+            ctx.lineWidth = 10;
+            ctx.stroke();
+        }
+    }
     let boardFilled = fillBoard();
     while (!boardFilled) {
         boardFilled = fillBoard();
     }
+    makePlayerBoard();
     printBoard();
-    for (let row = 0; row < board.length; row++) {
-        for (let col = 0; col < board.length; col++) {
-            if (board[row][col] != 0) {
-                placeNumberBoard(row, col, board[row][col]);
+    for (let row = 0; row < boardPlayer.length; row++) {
+        for (let col = 0; col < boardPlayer.length; col++) {
+            if (boardPlayer[row][col] != 0) {
+                placeNumberBoard(row, col, boardPlayer[row][col]);
             }
         }
     }
@@ -174,15 +255,15 @@ function setupBoard() {
 
 function makePlayerBoard() {
     for (let row = 0; row < boardPlayer.length; row++) {
-        for (let col = 0; col < boardPlayer[row].length; col++) {
+        for (let col = 0; col < boardPlayer.length; col++) {
             boardPlayer[row][col] = board[row][col];
         }
     }
-    for (let row = 0; row < boardPlayer.length; row++) {
-        for (let col = 0; col < boardPlayer[row].length; col++) {
-            if (boardPlayer[row][col] != 0) {
-                placeNumberBoard(row, col, boardPlayer[row][col]);
-            }
+    for (let n = 0; n < 60; n++) {
+        let row = Math.floor(Math.random() * 9);
+        let col = Math.floor(Math.random() * 9);
+        if (boardPlayer[row][col] != 0) {
+            boardPlayer[row][col] = 0;
         }
     }
 }
@@ -279,6 +360,16 @@ function fillSpace(row, col) {
     } while (!isValid);
     return isValid;
 }
+
+
+function fillSpaceNumber(row, col, number) {
+    if (board[row][col] == number) {
+        boardPlayer[row][col] = number;
+        placeNumberBoard(row, col, number);
+    }
+}
+
+
 
 function threeByThree(row, col) {
     let nonCoderRow = (row+1);
