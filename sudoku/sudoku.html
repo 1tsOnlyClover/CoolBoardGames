@@ -1,40 +1,39 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <head>
         <meta name= "viewport" content="width=device-width, initial-scale=1.0">
         <meta charset="UTF-8">
-        <meta name="description" content="Connect Four Game">
-        <meta name="keywords" content="Connect Four, Game">
+        <meta name="description" content="Sudoku Game">
+        <meta name="keywords" content="sudoku, Game">
         <meta name="author" content="The Something Group">
-        <title>Connect Four Game</title>
+        <title>Sudoku</title>
         <link rel="stylesheet" href="fourStyle.css">
     </head>
     <body>
     <header role="banner">
         <div class="container">
-            <h1>Connect Four</h1>
+            <h1>Sudoku</h1>
             <div id="game-board"></div>
         </div>
     </header>
     </body>
     <div class="game">
         <div id="game-board">
-            <canvas id="fourCanvas" width="700" height="600"></canvas>
+        <canvas id="game-canvas" width="900" height="900"></canvas>
+        <script src="sudoku.js"></script>
         </div>
     </div>
-    <script src="fourGame.js"></script>
     <main>
-        <div class="game-rules">
+        <div class="container">
+            <div class="reset">
+                <button id="reset-button">Reset Game</button>
+            </div>
+        </div>
+        <div class="game rules">
             <h2>Game Rules</h2>
             <ul>
                 <li>Players take turns dropping colored discs into the grid.</li>
-                                <p></p>
-                <li>The first player to connect four discs in a row,</li>
-                                <p></p>
-                <li>(horizontally, vertically, or diagonally) wins.</li>
-                                <p></p>
-                <li>The winner begins the next game.</li>
-                                <p></p>
+                <li>The first player to connect four discs in a row (horizontally, vertically, or diagonally) wins.</li>
                 <li>If the grid is filled without a winner, the game is a draw.</li>
             </ul>
         </div>
