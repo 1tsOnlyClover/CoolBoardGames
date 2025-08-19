@@ -49,6 +49,7 @@ function drawGrid() {
     }
 }
 
+// Drawing the Tic Tac Toe board
 function drawBoard() {
     drawGrid();
     const size = canvas.width / 3;
@@ -56,6 +57,8 @@ function drawBoard() {
         for (let col = 0; col < 3; col++) {
             const x = col * size + size / 2;
             const y = row * size + size / 2;
+            // Draw the player symbols based on where the 'x' or 'o' is placed
+            // on the board 2D array
             if (board[row][col] === 'X') {
                 // Draw X
                 ctx.strokeStyle = "red";
@@ -98,3 +101,103 @@ function placeMove(row, col, player) {
 // Initial setup
 drawBoard();
 printBoard();
+let gameOver = false;
+let firstPlayer = player1;
+let currentPlayer = firstPlayer;
+
+// Scoreboard
+const scoreBoard = document.getElementById('scoreBoard');
+let xScore = 0;
+let oScore = 0;
+function updateScoreBoard() {
+    scoreBoard.textContent = `X: ${xScore} | O: ${oScore}`;
+}
+
+// Turn indicator
+const turnIndicator = document.getElementById('turnIndicator');
+function updateTurnIndicator() {
+    if (gameOver) {
+        turnIndicator.textContent = '';
+    } else {
+        turnIndicator.textContent = `Current Turn: ${currentPlayer}`;
+    }
+}
+updateScoreBoard();
+updateTurnIndicator();
+
+
+// Check for a winner or draw
+function checkWinner() {
+    // Rows, columns, diagonals
+    for (let i = 0; i < 3; i++) {
+        // Check rows
+        if (board[i][0] !== 0 && board[i][0] === board[i][1] && board[i][1] === board[i][2]) {
+            return board[i][0];
+        }
+        // Check columns
+        if (board[0][i] !== 0 && board[0][i] === board[1][i] && board[1][i] === board[2][i]) {
+            return board[0][i];
+        }
+    }
+    // Diagonals
+    if (board[0][0] !== 0 && board[0][0] === board[1][1] && board[1][1] === board[2][2]) {
+        return board[0][0];
+    }
+    if (board[0][2] !== 0 && board[0][2] === board[1][1] && board[1][1] === board[2][0]) {
+        return board[0][2];
+    }
+    // Check for draw
+    let isDraw = true;
+    for (let r = 0; r < 3; r++) {
+        for (let c = 0; c < 3; c++) {
+            if (board[r][c] === 0) isDraw = false;
+        }
+    }
+    if (isDraw) return 'draw';
+    return null;
+}
+
+// Reset button Code
+const resetBtn = document.getElementById('resetBtn');
+if (resetBtn) {
+    resetBtn.addEventListener('click', function() {
+        resetBoard();
+        drawBoard();
+        // Alternate who goes first
+        firstPlayer = (firstPlayer === player1) ? player2 : player1;
+        currentPlayer = firstPlayer;
+        gameOver = false;
+        updateTurnIndicator();
+        updateScoreBoard();
+    });
+}
+
+// Event listener for canvas click
+canvas.addEventListener('click', function(event) {
+    if (gameOver) return;
+    const rect = canvas.getBoundingClientRect();
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
+    const size = canvas.width / 3;
+    const col = Math.floor(x / size);
+    const row = Math.floor(y / size);
+    if (placeMove(row, col, currentPlayer)) {
+        drawBoard();
+        const winner = checkWinner();
+        if (winner) {
+            gameOver = true;
+            if (winner === player1) xScore++;
+            if (winner === player2) oScore++;
+            updateScoreBoard();
+            updateTurnIndicator();
+            if (winner === 'draw') {
+                turnIndicator.textContent = "It's a draw!";
+            } else {
+                turnIndicator.textContent = winner + " wins!";
+            }
+        } else {
+            currentPlayer = (currentPlayer === player1) ? player2 : player1;
+            updateTurnIndicator();
+        }
+    }
+});
