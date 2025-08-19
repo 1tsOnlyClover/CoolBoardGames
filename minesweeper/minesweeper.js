@@ -14,19 +14,48 @@ let rowClicked = 0;
 let pos = { x: 0, y: 0 };
 let width = minesweeperCanvas.width;
 let height = minesweeperCanvas.height;
+let firstClick = true;
 
 minesweeperCanvas.addEventListener('click', function(e) {
     pos = getCursorPosition(minesweeperCanvas, e)
     determineCol();
     determineRow();
     console.log("Column clicked: " + colClicked + ", Row clicked: " + rowClicked);
+    if (firstClick) {
+        firstClick = false;
+        clearBoard();
+        do {
+            newPuzzle();
+        } while (board[rowClicked][colClicked] == -1);
+        setupBoard();
+        handleClick(rowClicked, colClicked);
+    } else {
+        handleClick(rowClicked, colClicked);
+    }
 });
 
-// if (winCondition()){
-//     ctx.fillStyle = "white";
-//     ctx.font = "50px Comics Sans MS";
-//     ctx.fillText("Good Job!", 350, 465);
-// }
+minesweeperCanvas.addEventListener('contextmenu', function(e) {
+    e.preventDefault();
+    pos = getCursorPosition(minesweeperCanvas, e);
+    determineCol();
+    determineRow();
+    console.log("Right-clicked Column: " + colClicked + ", Row: " + rowClicked);
+    if (flaggedBoard[rowClicked][colClicked] == 0) {
+    flaggedBoard[rowClicked][colClicked] = 1;
+    } else {
+        flaggedBoard[rowClicked][colClicked] = 0;
+    }
+    if (flaggedBoard[rowClicked][colClicked] == 1) {
+        ctx.fillStyle = "#ffff00";
+    } else {
+        if((colClicked + rowClicked) % 2 == 0) {
+            ctx.fillStyle = "#daefcbff";
+        } else {
+            ctx.fillStyle = "#b3caa0ff";
+        }
+    }
+    ctx.fillRect((width/16 * colClicked)+2, (height/16 * rowClicked)+2, width/16-4, height/16-4);
+});
 
 function determineCol() {
     if (pos.x < width/16) {
@@ -120,6 +149,25 @@ const board = [
     [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
 ];
 
+const flaggedBoard = [
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+];
+
 // 0 will be an unfilled space and -1 will be a mine
 // board[row][column]
 
@@ -141,6 +189,7 @@ function clearBoard() {
     for (let row = 0; row < board.length; row++) {
         for (let col = 0; col < board.length; col++) {
             board[row][col] = 0;
+            flaggedBoard[row][col] = 0;
         }
     }
 }
@@ -150,12 +199,12 @@ document.addEventListener("DOMContentLoaded", function() {
     resetBtn.addEventListener("click", function() {
         clearBoard();
         setupBoard();
+        firstClick = true;
     });
 });
 
 // will clear whatever is currently displayed and will clear the logical board, it will also set up the display 
 function setupBoard() {
-    clearBoard();
     ctx.clearRect(0,0,width,height)
     ctx.fillStyle = "black";
     ctx.fillRect(0,0,width,height);
@@ -170,8 +219,6 @@ function setupBoard() {
             ctx.stroke();
         }
     }
-    
-    newPuzzle(); // fill the board with numbers
 
     for (let row = 0; row < board.length; row++) {
         for (let col = 0; col < board.length; col++) {
@@ -205,19 +252,39 @@ function newPuzzle() {
         for (let col = 0; col < board.length; col++) {
             if (board[row][col] != -1) {
                 board[row][col] = threeByThree(row, col);
-            } else {
-                ctx.fillStyle = "red";
-                ctx.fillRect((width/16 * col), (height/16 * row), width/16, height/16);
             }
-            fillSpaceNumber(row, col, board[row][col]);
         }
     }
 }
 
+function handleClick(row, col) {
+    if (board[row][col] == -1) {
+        boom();
+    } else {
+        fillSpaceNumber(row, col, board[row][col]);
+    }
+}
+
+function boom() {
+    // Handle game over
+    for (let row = 0; row < board.length; row++) {
+        for (let col = 0; col < board.length; col++) {
+            if (board[row][col] == -1) {
+                ctx.fillStyle = "red";
+                ctx.fillRect((width/16 * col)+2, (height/16 * row)+2, width/16-4, height/16-4);
+            }
+        }
+    }
+    ctx.fillStyle = "blue";
+    let fontSize = width / 15;
+    ctx.font = `${fontSize}px Comics Sans MS`;
+    ctx.fillText("Game Over", width / 3, height / 2);
+}
 
 function placeNumberBoard(rowIndex,colIndex,number) {
     ctx.fillStyle = "black";
-    ctx.font = "20px Comics Sans MS";
+    let fontSize = width/35;
+    ctx.font = `${fontSize}px Comics Sans MS`;
     ctx.fillText(number, colIndex * width/16 + width/32, rowIndex * height/16 + height/32);
 }
 
