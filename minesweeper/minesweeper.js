@@ -23,10 +23,10 @@ minesweeperCanvas.addEventListener('click', function(e) {
     console.log("Column clicked: " + colClicked + ", Row clicked: " + rowClicked);
     if (firstClick) {
         firstClick = false;
-        clearBoard();
         do {
+            clearBoard();
             newPuzzle();
-        } while (board[rowClicked][colClicked] == -1);
+        } while (board[rowClicked][colClicked] != 0);
         setupBoard();
         handleClick(rowClicked, colClicked);
     } else {
@@ -46,7 +46,7 @@ minesweeperCanvas.addEventListener('contextmenu', function(e) {
         flaggedBoard[rowClicked][colClicked] = 0;
     }
     if (flaggedBoard[rowClicked][colClicked] == 1) {
-        ctx.fillStyle = "#ffff00";
+        ctx.fillStyle = "#ff7418a9";
     } else {
         if((colClicked + rowClicked) % 2 == 0) {
             ctx.fillStyle = "#daefcbff";
@@ -168,6 +168,25 @@ const flaggedBoard = [
     [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
 ];
 
+const clicksHandled = [
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+];
+
 // 0 will be an unfilled space and -1 will be a mine
 // board[row][column]
 
@@ -190,6 +209,7 @@ function clearBoard() {
         for (let col = 0; col < board.length; col++) {
             board[row][col] = 0;
             flaggedBoard[row][col] = 0;
+            clicksHandled[row][col] = 0;
         }
     }
 }
@@ -261,8 +281,78 @@ function handleClick(row, col) {
     if (board[row][col] == -1) {
         boom();
     } else {
-        fillSpaceNumber(row, col, board[row][col]);
+        if (board[row][col] != 0) {
+            ctx.fillStyle = clearingHex;
+            ctx.fillRect((width/16 * col)+2, (height/16 * row)+2, width/16-4, height/16-4);
+            fillSpaceNumber(row, col, board[row][col]);
+            clicksHandled[row][col] = 1;
+        } else {
+            if (clicksHandled[row][col] != 1) {
+                handleClearings(row, col);
+                clicksHandled[row][col] = 1;
+            }
+        }
     }
+    if (winDetection()) {
+        ctx.fillStyle = "blue";
+        let fontSize = width / 15;
+        ctx.font = `${fontSize}px Comics Sans MS`;
+        ctx.fillText("You Win!", width / 3, height / 2);
+    }
+    return;
+}
+
+function winDetection() {
+    clickCount = 0;
+    for (let row = 0; row < board.length; row++) {
+        for (let col = 0; col < board.length; col++) {
+            if (board[row][col] != -1 && clicksHandled[row][col] == 1) {
+                clickCount++;
+            }
+        }
+    }
+    return clickCount == (board.length * board.length - 40);
+}
+
+function generateHex() {
+    let hex = "#";
+    for (let i = 0; i < 6; i++) {
+        hex += Math.floor(Math.random() * 16).toString(16);
+    }
+    return hex + "3b";
+}
+// let clearingHex = generateHex();
+// let clearingHex = "#eb73db3b";
+let clearingHex = "#f1d3a78e";
+console.log("Clearing hex: " + clearingHex);
+
+function handleClearings(row, col) {
+    clicksHandled[row][col] = 1;
+    ctx.fillStyle = clearingHex;
+    ctx.fillRect((width/16 * col)+2, (height/16 * row)+2, width/16-4, height/16-4);
+    let startRow = row - 1;
+    let startCol = col - 1;
+    let endRow = row + 1;
+    let endCol = col + 1;
+    for (let i = startRow; i <= endRow; i++) {
+        if (i < 0) {
+            i = 0;
+        } else if (i > 15) {
+            break;
+        }
+        for (let j = startCol; j <= endCol; j++) {
+            if (j < 0) {
+                j = 0;
+            } else if (j > 15) {
+                break;
+            }
+            if (clicksHandled[i][j] != 1) {
+                handleClick(i, j);
+                clicksHandled[i][j] = 1;
+            }
+        }
+    }
+    return;
 }
 
 function boom() {
