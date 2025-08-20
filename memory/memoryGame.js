@@ -141,14 +141,15 @@ function displayButton(text,fontSize,xPos,yPos,size,id) {
     ctx.arc(xPos + (size * -0.25), yPos + (size * 1.25), size * 0.25, Math.PI * 0.5, Math.PI * 1);
     ctx.lineTo(xPos + (size * -0.5), yPos + (size * 0.5));
     ctx.arc(xPos + (size * -0.25), yPos + (size * 0.25), size * 0.25, Math.PI * 1, Math.PI * 1.5);
-    ctx.fill()
+    ctx.fill();
     ctx.stroke();
     ctx.font = fontSize + "px Arial";
     ctx.fillStyle = "rgba(91, 91, 91, 1)";
-    ctx.fillText(text,xPos - (0.25 * size),yPos + size);
-    return new ClickSpace(xPos - (0.5 * size), yPos, xPos + (1.25 * size), yPos + (1 * size),id);
+    ctx.fillText(text, xPos - (0.25 * size), yPos + size);
+    return new ClickSpace(xPos - (0.5 * size), yPos, xPos + (1.6 * size), yPos + (1.6 * size), id);
 }
-let menuClickSpaces = []
+
+let menuClickSpaces = [];
 
 function displayMenu() {
     menuClickSpaces = [];
@@ -177,14 +178,71 @@ function displayMenu() {
     menuClickSpaces.push(displayButton("10x20",30,700,400,50,[10,20]));
 }
 
-function displayGame() { // need to do this one
+let gameClickSpaces = [];
 
+function displayCard(xPos, yPos, size, cornRad, id, show, cardType) {
+    ctx.fillStyle = (show ? "rgba(228, 228, 228, 1)" : "rgba(252, 185, 14, 1)");
+    ctx.strokeStyle = "rgba(91, 91, 91, 1)";
+    ctx.lineWidth = 3;
+    ctx.beginPath()
+    ctx.moveTo(xPos + cornRad, yPos);
+
+    ctx.lineTo(xPos + cornRad + size, yPos);
+    ctx.arc(xPos + cornRad + size, yPos + cornRad, cornRad, Math.PI * 1.5, 0);
+
+    ctx.lineTo(xPos + size + cornRad + cornRad, yPos + size + cornRad);
+    ctx.arc(xPos + size + cornRad, yPos + size + cornRad, cornRad, Math.PI * 0, Math.PI * 0.5);
+
+    ctx.lineTo(xPos + cornRad, yPos + size + cornRad + cornRad);
+    ctx.arc(xPos + cornRad, yPos + size + cornRad, cornRad, Math.PI * 0.5, Math.PI);
+
+    ctx.lineTo(xPos, yPos + cornRad);
+    ctx.arc(xPos + cornRad, yPos + cornRad, cornRad, Math.PI, Math.PI * 1.5);
+
+    ctx.fill();
+    ctx.stroke();
+
+    if (show) {
+        ctx.fillStyle = "rgba(91, 91, 91, 1)";
+        ctx.font = size * 0.75 + "px Arial";
+        ctx.fillText(cardType, xPos, yPos + size);
+    }
+
+    return new ClickSpace(xPos, yPos, xPos + size + cornRad + cornRad, yPos + size + cornRad + cornRad, id);
+}
+
+function displayBasicCard(xPos, yPos, size, id, show, cardType) {
+    const cardSize = size * 0.8;
+    const radSize = size * 0.1;
+    return displayCard(xPos, yPos, cardSize, radSize, id, show, cardType);
+}
+
+function displayGame() {
+    gameClickSpaces = [];
+    const rowCount = board.length;   // height
+    const colCount = board[0].length;    // width
+
+    const canvasWidth = 900;
+    const canvasHeight = 700;
+
+    const heightRatio = (canvasHeight - 40) / rowCount;
+    const widthRatio = (canvasWidth - 40) / colCount;
+
+    const division = heightRatio < widthRatio ? heightRatio : widthRatio;
+
+    for (let row = 0; row < board.length; row++) {
+        for (let col = 0 ; col < board[row].length; col++) {
+            if (displayBoard[row][col] != -1) {
+                gameClickSpaces.push(displayBasicCard(20 + (division * col), 20 + (division * row), division * 0.9, [row, col], displayBoard[row][col], board[row][col]));
+            }
+        }
+    }
 }
 
 function display() {
     ctx.clearRect(0,0,memoryCanvas.width,memoryCanvas.height);
     ctx.fillStyle = "rgba(19, 164, 212, 1)";
-    ctx.fillRect(0,0,memoryCanvas.width,memoryCanvas.height)
+    ctx.fillRect(0,0,memoryCanvas.width,memoryCanvas.height);
     if (inGame) {
         displayGame();
     } else {
@@ -194,9 +252,62 @@ function display() {
 
 function getCursorPosition(event) {
     const rect = memoryCanvas.getBoundingClientRect();
-    const x = event.clientX - rect.left;
-    const y = event.clientY - rect.top;
+    const x = (event.clientX - rect.left) * (memoryCanvas.width / rect.width);
+    const y = (event.clientY - rect.top) * (memoryCanvas.height / rect.height);
     return { x: x, y: y };
 }
+
+function findClickBox(pos, clickBoxes) {
+    for (let i = 0; i < clickBoxes.length; i++) {
+        if (clickBoxes[i].inside(pos.x, pos.y)) {
+            return {index: i, id: clickBoxes[i].id};
+        }
+    }
+    return null;
+}
+
+function gameOnClick(event) {
+    if (getCardsStaged() >= 2) {
+        evaluateStagedCards();
+        if (isFinished()) {
+            inGame = false;
+        }
+        return;
+    }
+    const pos = getCursorPosition(event);
+    const clickedThing = findClickBox(pos, gameClickSpaces);
+    if (clickedThing != null) {
+        selectCard(clickedThing.id[0], clickedThing.id[1]);
+    }
+}
+
+function menuOnClick(event) {
+    const pos = getCursorPosition(event);
+    const clickedThing = findClickBox(pos, menuClickSpaces);
+    if (clickedThing != null) {
+        inGame = true;
+        setupBoard(clickedThing.id[0], clickedThing.id[1]);
+    }
+}
+
+function isFinished() {
+    for (let row = 0; row < board.length; row++) {
+        for (let col = 0; col < board[row].length; col++) {
+            if (board[row][col] != -1) {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
+memoryCanvas.addEventListener('click', function(e) {
+    if (inGame) {
+        gameOnClick(e);
+    } else {
+        menuOnClick(e);
+    }
+    display();
+});
 
 display();
