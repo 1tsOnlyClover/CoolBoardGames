@@ -33,7 +33,7 @@ function resetBoard() {
 function drawGrid() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     const size = canvas.width / 3;
-    ctx.strokeStyle = "#000";
+    ctx.strokeStyle = "#ffffffff";
     ctx.lineWidth = 2;
     for (let i = 1; i < 3; i++) {
         // Vertical lines
@@ -71,7 +71,7 @@ function drawBoard() {
                 ctx.stroke();
             } else if (board[row][col] === 'O') {
                 // Draw O
-                ctx.strokeStyle = "blue";
+                ctx.strokeStyle = "purple";
                 ctx.lineWidth = 3;
                 ctx.beginPath();
                 ctx.arc(x, y, size / 4, 0, 2 * Math.PI);
