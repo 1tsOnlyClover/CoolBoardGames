@@ -1,11 +1,13 @@
-// square, triangle, circle, hollow square, hollow triangle, hollow circle, wavy line, straight line
+// square, triangle, circle, hollow square, hollow triangle, hollow circle, straight line, jagged line
 // 1, 2, 3, 4
 // red, orange, yellow, green, blue, purple, black
-// 8 * 4 * 7 = 224
+// 8 * 4 * 7 = 252
 
 let board;
 
 let displayBoard;
+
+let designMap = {};
 
 function printBoard() {
     let str = "";
@@ -27,6 +29,24 @@ function setupBoard(rowSize, colSize) {
         throw new Error("rowSize and colSize must multiply to an even number");
     }
     cardCount = (rowSize * colSize) / 2;
+
+    for (let i = 0; i < cardCount; i++) {
+        let going = true;
+        while (going) {
+            designMap[i] = new CardDesign(nextInt(10), nextInt(4) + 1, nextInt(7));
+            const values = Object.values(designMap);
+            let count = 0;
+            for (let j = 0; j < values.length; j++) {
+                if (values[j].identity == designMap[i].identity) {
+                    count++;
+                }
+            }
+            if (count == 1) {
+                going = false;
+            }
+        }
+    }
+
     availibleCards = [];
     for (let i = 0; i < cardCount; i++) {
         availibleCards.push(i);
@@ -180,8 +200,230 @@ function displayMenu() {
 
 let gameClickSpaces = [];
 
+class SoloDesign {
+    static draw(xPos, yPos, size, typeIndex, color) {
+        ctx.strokeStyle = color;
+        ctx.fillStyle = color;
+        ctx.lineWidth = 0;
+        switch (typeIndex) {
+            case 0:
+                this.drawLine(xPos, yPos, size);
+                break;
+            case 1:
+                this.drawJaggedLine(xPos, yPos, size);
+                break;
+            case 2:
+                this.drawSquare(xPos, yPos, size);
+                break;
+            case 3:
+                this.drawTriangle(xPos, yPos, size);
+                break;
+            case 4:
+                this.drawCircle(xPos, yPos, size);
+                break;
+            case 5:
+                this.drawHollowSquare(xPos, yPos, size);
+                break;
+            case 6:
+                this.drawHollowTriangle(xPos, yPos, size);
+                break;
+            case 7:
+                this.drawHollowCircle(xPos, yPos, size);
+                break;
+            case 8:
+                this.drawHollowPentagram(xPos, yPos, size);
+                break;
+            case 9:
+                this.drawPentagram(xPos, yPos, size);
+                break;
+        }
+    }
+
+    static drawLine(xPos, yPos, size) {
+        ctx.lineWidth = size / 15;
+        ctx.beginPath();
+        
+        ctx.moveTo(xPos + (size * 0.125), yPos);
+        ctx.lineTo(xPos + (size * 0.125),yPos + size);
+
+        ctx.stroke();
+    }
+
+
+    static drawJaggedLine(xPos, yPos, size) {
+        ctx.lineWidth = size / 17;
+        ctx.beginPath();
+        
+        ctx.moveTo(xPos, yPos);
+        ctx.lineTo(xPos + (size * 0.25), yPos + (size * (1/3)));
+        ctx.lineTo(xPos, yPos + (size * (2/3)));
+        ctx.lineTo(xPos + (size * 0.25), yPos + size)
+
+        ctx.stroke();
+    }
+
+    static drawSquare(xPos, yPos, size) {
+        ctx.fillRect(xPos, yPos, size, size);
+    }
+
+    static drawTriangle(xPos, yPos, size) {
+        ctx.beginPath()
+
+        ctx.moveTo(xPos, yPos + size);
+        ctx.lineTo(xPos + (size * 0.5), yPos + (size * (1 - 0.8660254)))
+        ctx.lineTo(xPos + size, yPos + size);
+        ctx.lineTo(xPos, yPos + size);
+
+        ctx.fill();
+        ctx.stroke();
+    }
+
+    static drawCircle(xPos, yPos, size) {
+        ctx.beginPath()
+
+        ctx.arc(xPos + (size * (1/2)), yPos + (size * (1/2)), size * (1/2), 0, Math.PI * 2);
+
+        ctx.fill();
+        ctx.stroke();
+    }
+
+    static drawHollowSquare(xPos, yPos, size) {
+        ctx.lineWidth = size / 15;
+        ctx.beginPath()
+
+        ctx.moveTo(xPos, yPos);
+        ctx.lineTo(xPos + size, yPos);
+        ctx.lineTo(xPos + size, yPos + size);
+        ctx.lineTo(xPos, yPos + size);
+        ctx.lineTo(xPos, yPos);
+        ctx.lineTo(xPos + size, yPos);
+
+        ctx.stroke();
+    }
+
+    static drawHollowTriangle(xPos, yPos, size) {
+        ctx.lineWidth = size / 15;
+        ctx.beginPath()
+
+        ctx.moveTo(xPos, yPos + size);
+        ctx.lineTo(xPos + (size * 0.5), yPos + (size * (1 - 0.8660254)))
+        ctx.lineTo(xPos + size, yPos + size);
+        ctx.lineTo(xPos, yPos + size);
+        ctx.lineTo(xPos + (size * 0.5), yPos + (size * (1 - 0.8660254)))
+
+        ctx.stroke();
+    }
+
+    static drawHollowCircle(xPos, yPos, size) {
+        ctx.lineWidth = size / 15;
+        ctx.beginPath()
+
+        ctx.arc(xPos + (size * (1/2)), yPos + (size * (1/2)), size * (1/2), 0, Math.PI * 2);
+
+        ctx.stroke();
+    }
+
+    static drawHollowPentagram(xPos, yPos, size) {
+        ctx.lineWidth = size / 15;
+        ctx.beginPath();
+
+        ctx.moveTo(xPos + (size * (0.000)), yPos + (size * (0.363)), size);
+        ctx.lineTo(xPos + (size * (1.000)), yPos + (size * (0.363)), size);
+        ctx.lineTo(xPos + (size * (0.191)), yPos + (size * (0.951)), size);
+        ctx.lineTo(xPos + (size * (0.500)), yPos + (size * (0.000)), size);
+        ctx.lineTo(xPos + (size * (0.809)), yPos + (size * (0.951)), size);
+        ctx.lineTo(xPos + (size * (0.000)), yPos + (size * (0.363)), size);
+        ctx.lineTo(xPos + (size * (1.000)), yPos + (size * (0.363)), size);
+
+        ctx.stroke();
+    }
+
+    static drawPentagram(xPos, yPos, size) {
+        ctx.beginPath();
+
+        ctx.moveTo(xPos + (size * (0.000)), yPos + (size * (0.363)), size); // 1
+        ctx.lineTo(xPos + (size * (1.000)), yPos + (size * (0.363)), size); // 3
+        ctx.lineTo(xPos + (size * (0.191)), yPos + (size * (0.951)), size); // 5
+        ctx.lineTo(xPos + (size * (0.500)), yPos + (size * (0.000)), size); // 2
+        ctx.lineTo(xPos + (size * (0.809)), yPos + (size * (0.951)), size); // 4
+        ctx.lineTo(xPos + (size * (0.000)), yPos + (size * (0.363)), size); // 1
+
+        ctx.fill();
+        ctx.stroke();
+    }
+}
+
+class CardDesign {
+    constructor(designType, designCount, color) {
+        this.designType = designType;
+        this.designCount = designCount;
+        this.color = "";
+        switch (color) {
+            case 0:
+                this.color = "red";
+                break;
+            case 1:
+                this.color = "rgba(255, 136, 0, 1)";
+                break;
+            case 2:
+                this.color = "yellow";
+                break;
+            case 3:
+                this.color = "green";
+                break;
+            case 4:
+                this.color = "blue";
+                break;
+            case 5:
+                this.color = "purple";
+                break;
+            case 6:
+                this.color = "black";
+                break;
+        }
+        this.straigtStack = this.designType <= 1;
+        this.identity = designType + "" + designCount + "" + color
+    }
+    
+    draw(xPos,yPos,size) {
+        if (this.straigtStack) {
+            if (this.designCount == 1) {
+                SoloDesign.draw(xPos + (size * (3/8)),yPos + (size * 0.1), size * 0.8, this.designType, this.color);
+            } else if (this.designCount == 2) {
+                SoloDesign.draw(xPos + (size * (5/16)),yPos + (size * 0.1), size * 0.8, this.designType, this.color);
+                SoloDesign.draw(xPos + (size * (7/16)),yPos + (size * 0.1), size * 0.8, this.designType, this.color);
+            } else if (this.designCount == 3) {
+                SoloDesign.draw(xPos + (size * (2/8)),yPos + (size * 0.1), size * 0.8, this.designType, this.color);
+                SoloDesign.draw(xPos + (size * (3/8)),yPos + (size * 0.1), size * 0.8, this.designType, this.color);
+                SoloDesign.draw(xPos + (size * (4/8)),yPos + (size * 0.1), size * 0.8, this.designType, this.color);
+            } else if (this.designCount == 4) {
+                SoloDesign.draw(xPos + (size * (3/16)),yPos + (size * 0.1), size * 0.8, this.designType, this.color);
+                SoloDesign.draw(xPos + (size * (5/16)),yPos + (size * 0.1), size * 0.8, this.designType, this.color);
+                SoloDesign.draw(xPos + (size * (7/16)),yPos + (size * 0.1), size * 0.8, this.designType, this.color);
+                SoloDesign.draw(xPos + (size * (9/16)),yPos + (size * 0.1), size * 0.8, this.designType, this.color);
+            }
+        } else {
+            if (this.designCount == 1) {
+                SoloDesign.draw(xPos + (size * 0.15),yPos + (size * 0.15), size * 0.7, this.designType, this.color);
+            } else if (this.designCount == 2) {
+                SoloDesign.draw(xPos + (size * 0.275),yPos + (size * 0.0), size * 0.45, this.designType, this.color);
+                SoloDesign.draw(xPos + (size * 0.275),yPos + (size * 0.55), size * 0.45, this.designType, this.color);
+            } else if (this.designCount == 3) {
+                SoloDesign.draw(xPos + (size * 0.275),yPos + (size * 0.0), size * 0.45, this.designType, this.color);
+                SoloDesign.draw(xPos + (size * 0.0),yPos + (size * 0.55), size * 0.45, this.designType, this.color);
+                SoloDesign.draw(xPos + (size * 0.55),yPos + (size * 0.55), size * 0.45, this.designType, this.color);
+            } else if (this.designCount == 4) {
+                SoloDesign.draw(xPos + (size * 0.0),yPos + (size * 0.0), size * 0.45, this.designType, this.color);
+                SoloDesign.draw(xPos + (size * 0.55),yPos + (size * 0.0), size * 0.45, this.designType, this.color);
+                SoloDesign.draw(xPos + (size * 0.0),yPos + (size * 0.55), size * 0.45, this.designType, this.color);
+                SoloDesign.draw(xPos + (size * 0.55),yPos + (size * 0.55), size * 0.45, this.designType, this.color);
+            }
+        }
+    }
+}
+
 function displayCard(xPos, yPos, size, cornRad, id, show, cardType) {
-    ctx.fillStyle = (show ? "rgba(228, 228, 228, 1)" : "rgba(252, 185, 14, 1)");
+    ctx.fillStyle = (show ? "rgba(190, 189, 189, 1)" : "rgba(252, 185, 14, 1)");
     ctx.strokeStyle = "rgba(91, 91, 91, 1)";
     ctx.lineWidth = 3;
     ctx.beginPath()
@@ -203,9 +445,10 @@ function displayCard(xPos, yPos, size, cornRad, id, show, cardType) {
     ctx.stroke();
 
     if (show) {
-        ctx.fillStyle = "rgba(91, 91, 91, 1)";
-        ctx.font = size * 0.75 + "px Arial";
-        ctx.fillText(cardType, xPos, yPos + size);
+        designMap[cardType].draw(xPos + cornRad, yPos + cornRad, size);
+        // ctx.fillStyle = "rgba(91, 91, 91, 1)";
+        // ctx.font = size * 0.75 + "px Arial";
+        // ctx.fillText(cardType, xPos, yPos + size);
     }
 
     return new ClickSpace(xPos, yPos, xPos + size + cornRad + cornRad, yPos + size + cornRad + cornRad, id);
@@ -311,3 +554,20 @@ memoryCanvas.addEventListener('click', function(e) {
 });
 
 display();
+
+function pentagram(xPos, yPos, size) {
+    ctx.lineWidth = size / 15;
+    ctx.strokeStyle = "black";
+    ctx.beginPath();
+
+    ctx.moveTo(xPos + (size * (0)), yPos + (size * (0)), size);
+    ctx.lineTo(xPos + (size * (0 + 1)), yPos + (size * (0)), size);
+    ctx.lineTo(xPos + (size * (0 + 1 - 0.809)), yPos + (size * (0 + 0.588)), size);
+    ctx.lineTo(xPos + (size * (0 + 1 - 0.809 + 0.309)), yPos + (size * (0 + 0.588 - 0.951)), size);
+    ctx.lineTo(xPos + (size * (0 + 1 - 0.809 + 0.309 + 0.309)), yPos + (size * (0 + 0.588 - 0.951 + 0.951)), size);
+    ctx.lineTo(xPos + (size * (0 + 1 - 0.809 + 0.309 + 0.309 - 0.809)), yPos + (size * (0 + 0.588 - 0.951 + 0.951 - 0.588)), size);
+    ctx.lineTo(xPos + (size * (0 + 1)), yPos + (size * (0)), size);
+
+
+    ctx.stroke();
+}
