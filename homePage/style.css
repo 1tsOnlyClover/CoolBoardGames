@@ -5,6 +5,8 @@ html {
     background-color: black;
     margin-left: 10%;
     margin-right: 10%;
+    color: aliceblue;
+    text-align: center;
 }
 .site-intro {
     outline: auto;
