@@ -314,17 +314,7 @@ function winDetection() {
     return clickCount == (board.length * board.length - 40);
 }
 
-function generateHex() {
-    let hex = "#";
-    for (let i = 0; i < 6; i++) {
-        hex += Math.floor(Math.random() * 16).toString(16);
-    }
-    return hex + "3b";
-}
-// let clearingHex = generateHex();
-// let clearingHex = "#eb73db3b";
 let clearingHex = "#f1d3a78e";
-console.log("Clearing hex: " + clearingHex);
 
 function handleClearings(row, col) {
     clicksHandled[row][col] = 1;
