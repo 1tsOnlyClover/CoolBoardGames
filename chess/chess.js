@@ -193,7 +193,8 @@ function checkMove(originX, originY, sign, shiftX, shiftY, onlyCapture) {
 
 drawBoard();
 const spriteSheet = new Image();
-spriteSheet.src = 'git';
+spriteSheet.src = 'https://github.com/1tsOnlyClover/CoolBoardGames/blob/Chess/chess/Chess_Pieces_Sprites.png';
 spriteSheet.onload = () => {
   // Ready to draw pieces
+  ctx.drawImage(spriteSheet, piece.spriteX, piece.spriteY, tileSize, tileSize, x * tileSize, y * tileSize, tileSize, tileSize);
 };
