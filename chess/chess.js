@@ -105,91 +105,91 @@ function checkMove(originX, originY, sign, shiftX, shiftY, onlyCapture) {
     } catch {
         return null;
     }
-}
-
-
-function getMoves(originX, originY, onlyCapture) {
-    const peice = board[originX][originY];
-    const sign = getSign(peice);
-    const type = Math.abs(peice);
-    let moves = [];
-
-    if (type == 1 || type == 2) {
-        const move1 = checkMove(originX, originY, sign, sign,  1, onlyCapture);
-        const move2 = checkMove(originX, originY, sign, sign, -1, onlyCapture);
-        if (move1 != null) {
-            moves.push(move1);
+    function getMoves(originX, originY, onlyCapture) {
+        const peice = board[originX][originY];
+        const sign = getSign(peice);
+        const type = Math.abs(peice);
+        let moves = [];
+    
+        if (type == 1 || type == 2) {
+            const move1 = checkMove(originX, originY, sign, sign,  1, onlyCapture);
+            const move2 = checkMove(originX, originY, sign, sign, -1, onlyCapture);
+            if (move1 != null) {
+                moves.push(move1);
+            }
+            if (move2 != null) {
+                moves.push(move2);
+            }
+        } 
+        if (type == 2) {
+            const move3 = checkMove(originX, originY,sign, sign * -1, 1, onlyCapture);
+            const move4 = checkMove(originX, originY, sign, sign * -1, -1, onlyCapture);
+            if (move3 != null) {
+                moves.push(move3);
+            }
+            if (move4 != null) {
+                moves.push(move4);
+            }
         }
-        if (move2 != null) {
-            moves.push(move2);
-        }
-    } 
-    if (type == 2) {
-        const move3 = checkMove(originX, originY,sign, sign * -1, 1, onlyCapture);
-        const move4 = checkMove(originX, originY, sign, sign * -1, -1, onlyCapture);
-        if (move3 != null) {
-            moves.push(move3);
-        }
-        if (move4 != null) {
-            moves.push(move4);
-        }
+        return moves;
     }
-    return moves;
-}
-canvas.addEventListener('click', (e) => {
-  const rect = canvas.getBoundingClientRect();
-  const x = Math.floor((e.clientX - rect.left) / tileSize);
-  const y = Math.floor((e.clientY - rect.top) / tileSize);
-  // Use x,y to select or move pieces
-});
-const piece = board[x][y];
-if (piece == 1 || piece == -1) {
-    // Highlight possible moves for pawns
-    const moves = getMoves(x, y);
-    moves.forEach(move => {
-        ctx.fillStyle = 'rgba(0, 255, 0, 0.5)';
-        ctx.fillRect(move.destinationY * tileSize, move.destinationX * tileSize, tileSize, tileSize);
-    });
     canvas.addEventListener('click', (e) => {
-        const rect = canvas.getBoundingClientRect();
-        const x = Math.floor((e.clientX - rect.left) / tileSize);
-        const y = Math.floor((e.clientY - rect.top) / tileSize);
-        // Use x,y to select or move pieces
+      const rect = canvas.getBoundingClientRect();
+      const x = Math.floor((e.clientX - rect.left) / tileSize);
+      const y = Math.floor((e.clientY - rect.top) / tileSize);
+      // Use x,y to select or move pieces
     });
-}else if (piece == 2 || piece == -2) {
-    // Highlight possible moves for rooks
-    const moves = getMoves(x, y);
-    moves.forEach(move => {
-        ctx.fillStyle = 'rgba(0, 255, 0, 0.5)';
-        ctx.fillRect(move.destinationY * tileSize, move.destinationX * tileSize, tileSize, tileSize);
-    });
-}else if (piece == 3 || piece == -3) {
-    // Highlight possible moves for bishops
-    const moves = getMoves(x, y);
-    moves.forEach(move => {
-        ctx.fillStyle = 'rgba(0, 255, 0, 0.5)';
-        ctx.fillRect(move.destinationY * tileSize, move.destinationX * tileSize, tileSize, tileSize);
-    });
-}else if (piece == 4 || piece == -4) {
-    // Highlight possible moves for knights
-    const moves = getMoves(x, y);
-    moves.forEach(move => {
-        ctx.fillStyle = 'rgba(0, 255, 0, 0.5)';
-        ctx.fillRect(move.destinationY * tileSize, move.destinationX * tileSize, tileSize, tileSize);
-    });
-}else if (piece == 5 || piece == -5) {
-    // Highlight possible moves for queens
-    const moves = getMoves(x, y);
-    moves.forEach(move => {
-        ctx.fillStyle = 'rgba(0, 255, 0, 0.5)';
-        ctx.fillRect(move.destinationY * tileSize, move.destinationX * tileSize, tileSize, tileSize);
-    });
-}else if (piece == 6 || piece == -6) {
-    // Highlight possible moves for kings
-    const moves = getMoves(x, y);
-    moves.forEach(move => {
-        ctx.fillStyle = 'rgba(0, 255, 0, 0.5)';
-        ctx.fillRect(move.destinationY * tileSize, move.destinationX * tileSize, tileSize, tileSize);
-    });
+    const piece = board[x][y];
+    if (piece == 1 || piece == -1) {
+        // Highlight possible moves for pawns
+        const moves = getMoves(x, y);
+        moves.forEach(move => {
+            ctx.fillStyle = 'rgba(0, 255, 0, 0.5)';
+            ctx.fillRect(move.destinationY * tileSize, move.destinationX * tileSize, tileSize, tileSize);
+        });
+        canvas.addEventListener('click', (e) => {
+            const rect = canvas.getBoundingClientRect();
+            const x = Math.floor((e.clientX - rect.left) / tileSize);
+            const y = Math.floor((e.clientY - rect.top) / tileSize);
+            // Use x,y to select or move pieces
+        });
+    }else if (piece == 2 || piece == -2) {
+        // Highlight possible moves for rooks
+        const moves = getMoves(x, y);
+        moves.forEach(move => {
+            ctx.fillStyle = 'rgba(0, 255, 0, 0.5)';
+            ctx.fillRect(move.destinationY * tileSize, move.destinationX * tileSize, tileSize, tileSize);
+        });
+    }else if (piece == 3 || piece == -3) {
+        // Highlight possible moves for bishops
+        const moves = getMoves(x, y);
+        moves.forEach(move => {
+            ctx.fillStyle = 'rgba(0, 255, 0, 0.5)';
+            ctx.fillRect(move.destinationY * tileSize, move.destinationX * tileSize, tileSize, tileSize);
+        });
+    }else if (piece == 4 || piece == -4) {
+        // Highlight possible moves for knights
+        const moves = getMoves(x, y);
+        moves.forEach(move => {
+            ctx.fillStyle = 'rgba(0, 255, 0, 0.5)';
+            ctx.fillRect(move.destinationY * tileSize, move.destinationX * tileSize, tileSize, tileSize);
+        });
+    }else if (piece == 5 || piece == -5) {
+        // Highlight possible moves for queens
+        const moves = getMoves(x, y);
+        moves.forEach(move => {
+            ctx.fillStyle = 'rgba(0, 255, 0, 0.5)';
+            ctx.fillRect(move.destinationY * tileSize, move.destinationX * tileSize, tileSize, tileSize);
+        });
+    }else if (piece == 6 || piece == -6) {
+        // Highlight possible moves for kings
+        const moves = getMoves(x, y);
+        moves.forEach(move => {
+            ctx.fillStyle = 'rgba(0, 255, 0, 0.5)';
+            ctx.fillRect(move.destinationY * tileSize, move.destinationX * tileSize, tileSize, tileSize);
+        });
+    }
 }
+
+
 drawBoard();
