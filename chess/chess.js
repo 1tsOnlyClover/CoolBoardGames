@@ -191,5 +191,9 @@ function checkMove(originX, originY, sign, shiftX, shiftY, onlyCapture) {
     }
 }
 
-
 drawBoard();
+const spriteSheet = new Image();
+spriteSheet.src = 'git';
+spriteSheet.onload = () => {
+  // Ready to draw pieces
+};
