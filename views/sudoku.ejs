@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta name= "viewport" content="width=device-width, initial-scale=1.0">
+        <meta charset="UTF-8">
+        <meta name="description" content="Sudoku Game">
+        <meta name="keywords" content="sudoku, Game">
+        <meta name="author" content="The Something Group">
+        <title>Sudoku</title>
+        <link rel="stylesheet" href="/sudoku/sudokuStyle.css">
+    </head>
+    <body>
+    <header role="banner">
+        <div class="container">
+            <%- include('nav.ejs') %>
+            <h1>Sudoku</h1>
+            <div id="game-board"></div>
+        </div>
+    </header>
+    </body>
+    <div class="game">
+        <div id="game-board">
+        <canvas id="game-canvas" width="900" height="900"></canvas>
+        <script src="/sudoku/sudoku.js"></script>
+        </div>
+    </div>
+    <main>
+        <div class="container">
+            <div class="reset">
+                <button id="reset-button">Reset Game</button>
+            </div>
+        </div>
+        <div class="game rules">
+            <h2>Game Rules</h2>
+            <ul>
+                <li>Players take turns dropping colored discs into the grid.</li>
+                <li>The first player to connect four discs in a row (horizontally, vertically, or diagonally) wins.</li>
+                <li>If the grid is filled without a winner, the game is a draw.</li>
+            </ul>
+        </div>
+    </main>
+</html>

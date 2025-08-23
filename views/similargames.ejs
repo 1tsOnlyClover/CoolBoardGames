@@ -1,0 +1,10 @@
+<% for(let data of similarGames) { %>
+    <li>
+        <div class="game-item">
+            <h3><%= data %></h3>
+            <a href="/<%= data %>" class="clickable-image">
+                <img src="/homePage/<%= data %>Logo.png" width="100" height="100" alt="<%= data %> Clickable Image">
+            </a>
+        </div>
+    </li>
+<% } %>
