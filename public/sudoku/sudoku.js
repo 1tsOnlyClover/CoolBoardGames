@@ -33,8 +33,8 @@ function addInput() {
 
     input.type = 'text';
     input.style.position = 'absolute';
-    input.style.left = (colClicked * 100 + 100) + 'px';
-    input.style.top = (rowClicked * 100 + 350) + 'px';
+    input.style.left = (colClicked * 100 + sudokuCanvas.getBoundingClientRect().left - document.body.getBoundingClientRect().left + 50) + 'px';
+    input.style.top = (rowClicked * 100 + sudokuCanvas.getBoundingClientRect().top - document.body.getBoundingClientRect().top + 50) + 'px';
     input.style.width = '10px';
     input.onkeydown = determineNumEntered;
     document.body.appendChild(input);

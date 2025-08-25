@@ -30,7 +30,9 @@ minesweeperCanvas.addEventListener('click', function(e) {
         setupBoard();
         handleClick(rowClicked, colClicked);
     } else {
-        handleClick(rowClicked, colClicked);
+        if (clicksHandled[rowClicked][colClicked] != 1) {
+            handleClick(rowClicked, colClicked);
+        }
     }
 });
 
@@ -39,22 +41,24 @@ minesweeperCanvas.addEventListener('contextmenu', function(e) {
     pos = getCursorPosition(minesweeperCanvas, e);
     determineCol();
     determineRow();
-    console.log("Right-clicked Column: " + colClicked + ", Row: " + rowClicked);
-    if (flaggedBoard[rowClicked][colClicked] == 0) {
-    flaggedBoard[rowClicked][colClicked] = 1;
-    } else {
-        flaggedBoard[rowClicked][colClicked] = 0;
-    }
-    if (flaggedBoard[rowClicked][colClicked] == 1) {
-        ctx.fillStyle = "#ff7418a9";
-    } else {
-        if((colClicked + rowClicked) % 2 == 0) {
-            ctx.fillStyle = "#daefcbff";
+    if (clicksHandled[rowClicked][colClicked] != 1) {
+        console.log("Right-clicked Column: " + colClicked + ", Row: " + rowClicked);
+        if (flaggedBoard[rowClicked][colClicked] == 0) {
+        flaggedBoard[rowClicked][colClicked] = 1;
         } else {
-            ctx.fillStyle = "#b3caa0ff";
+            flaggedBoard[rowClicked][colClicked] = 0;
         }
+        if (flaggedBoard[rowClicked][colClicked] == 1) {
+            ctx.fillStyle = "#ff7418a9";
+        } else {
+            if((colClicked + rowClicked) % 2 == 0) {
+                ctx.fillStyle = "#daefcbff";
+            } else {
+                ctx.fillStyle = "#b3caa0ff";
+            }
+        }
+        ctx.fillRect((width/16 * colClicked)+2, (height/16 * rowClicked)+2, width/16-4, height/16-4);
     }
-    ctx.fillRect((width/16 * colClicked)+2, (height/16 * rowClicked)+2, width/16-4, height/16-4);
 });
 
 function determineCol() {
