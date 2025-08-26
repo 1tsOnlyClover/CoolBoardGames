@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name= "viewport" content="width=device-width, initial-scale=1.0">
+        <meta charset="UTF-8">
+        <meta name="description" content="checkers Game">
+        <meta name="keywords" content="Checkers, Game">
+        <meta name="author" content="The Something Group">
+        <title>Checkers</title>
+        <link rel="stylesheet" href="/tic-tac-toe/tictactoeStyle.css">
+    </head>
+    <body>
+    <header role="banner">
+        <div class="container">
+            <%- include('nav.ejs') %>
+            <h1>Tic Tac Toe</h1>
+            <div id="game-board"></div>
+        </div>
+    </header>
+    </body>
+    <body>
+    <div class="main-game-wrapper">
+        <div class="game-container">
+            <div id="scoreBoard"></div>
+            <div id="turnIndicator"></div>
+        </div>
+        <canvas id="board" height="500" width="500"></canvas>
+        <br>
+        <button id="resetBtn">Reset Game</button>
+    </div>
+    </body>
+    <main>
+        <div class="game-rules">
+            <h2>Game Rules</h2>
+            <ul>
+                <li>Players take turns on a 3x3 grid placing their symbol ('X' or 'O')</li>
+                <li>The first player to align three symbols horizontally, vertically, or diagonally wins</li>
+                <li>If all squares are filled without a winner, the game is a draw</li>
+            </ul>
+        </div>
+    </main>
+    <script src="/tic-tac-toe/tictactoeLogic.js"></script>
+</html>

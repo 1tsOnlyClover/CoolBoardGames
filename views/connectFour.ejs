@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name= "viewport" content="width=device-width, initial-scale=1.0">
+        <meta charset="UTF-8">
+        <meta name="description" content="Connect Four Game">
+        <meta name="keywords" content="Connect Four, Game">
+        <meta name="author" content="The Something Group">
+        <title>Connect Four Game</title>
+        <link rel="stylesheet" href="/connectFour/fourStyle.css">
+    </head>
+    <body>
+    <header role="banner">
+        <div class="container">
+            <%- include('nav.ejs') %>
+            <h1>Connect Four</h1>
+            <div id="game-board"></div>
+        </div>
+    </header>
+    </body>
+    <div class="game">
+        <div id="game-board">
+            <canvas id="fourCanvas" width="700" height="600"></canvas>
+        </div>
+    </div>
+    <script src="/connectFour/fourGame.js"></script>
+    <main>
+        <div class="game-rules">
+            <h2>Game Rules</h2>
+            <ul>
+                <li>Players take turns dropping colored discs into the grid.</li>
+                                <p></p>
+                <li>The first player to connect four discs in a row,</li>
+                                <p></p>
+                <li>(horizontally, vertically, or diagonally) wins.</li>
+                                <p></p>
+                <li>The winner begins the next game.</li>
+                                <p></p>
+                <li>If the grid is filled without a winner, the game is a draw.</li>
+            </ul>
+        </div>
+    </main>
+</html>
