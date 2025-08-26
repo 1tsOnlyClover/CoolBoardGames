@@ -10,6 +10,11 @@ app.use(express.json());
 app.use(express.urlencoded());
 
 
+app.get('/favicon.ico', (req, res) => {
+  res.sendFile(__dirname + '/public//homePage/logo.png');
+});
+
+
 app.get("/", (req, res) => {
     res.render("index")
 });
@@ -67,6 +72,14 @@ app.get("/checkers", (req, res) => {
     //     similarGames: similarGames
     // };
     res.render("checkers");
+
+});
+
+app.get("/sorry", (req, res) => {
+    // let model = {
+    //     similarGames: similarGames
+    // };
+    res.render("sorry");
 
 });
 

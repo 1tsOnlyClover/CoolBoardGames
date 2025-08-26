@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta name= "viewport" content="width=device-width, initial-scale=1.0">
+        <meta charset="UTF-8">
+        <meta name="description" content="Minesweeper Game">
+        <meta name="keywords" content="minesweeper, Game">
+        <meta name="author" content="CoolBoardGames">
+        <title>Sorry!</title>
+        <link rel="stylesheet" href="/sorry/sorryStyle.css">
+    </head>
+    <body>
+    <header role="banner">
+        <div class="container">
+            <%- include('nav.ejs') %>
+            <h1>Sorry!</h1>
+        </div>
+    </header>
+    </body>
+    <div class="game">
+        <div id="game-board">
+        <canvas id="game-canvas" width="700" height="700"></canvas>
+        <script src="/sorry/sorry.js"></script>
+        </div>
+    </div>
+    <main>
+        <div class="container">
+            <div class="reset">
+                <button id="reset-button">Reset Game</button>
+            </div>
+        </div>
+        <div class="game rules">
+            <h2>Game Rules</h2>
+            <ul>
+                <li>Players take turns drawing cards from the deck</li>
+                <li>When a player draws a card, they must move their game piece forward the number of spaces shown on the card</li>
+                <li>If a player lands on a space occupied by another player, they must go back to the start</li>
+                <li>The first player to reach the end of the board wins</li>
+            </ul>
+        </div>
+    </main>
+</html>

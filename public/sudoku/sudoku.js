@@ -25,6 +25,10 @@ sudokuCanvas.addEventListener('click', function(e) {
     if (input === undefined) {
         let userInput = addInput();
         // console.log(userInput);
+    } else {
+        document.body.removeChild(input);
+        input = undefined;
+        let userInput = addInput();
     }
 });
 
