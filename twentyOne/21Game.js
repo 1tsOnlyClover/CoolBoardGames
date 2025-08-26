@@ -45,17 +45,15 @@ function displayCards() {
     document.getElementById('playerCards').innerHTML = 'Player Cards: ' + playerHand.map(card => `${card.value} of ${card.suit}`).join(', ');
     document.getElementById('dealerCards').innerHTML = 'Dealer Cards: ' + dealerHand.map(card => `${card.value} of ${card.suit}`).join(', ');
 
-    // Render visual cards for player
     const playerVisuals = document.getElementById('playerCardVisuals');
     playerVisuals.innerHTML = '';
     playerHand.forEach(card => {
         const cardDiv = document.createElement('div');
         cardDiv.className = 'player-card-visual';
-        cardDiv.textContent = `${card.value} ${card.suit[0]}`; // e.g., "A H"
+        cardDiv.textContent = `${card.value} ${card.suit[0]}`; 
         playerVisuals.appendChild(cardDiv);
     });
 
-    // Render visual cards for dealer
     const dealerVisuals = document.getElementById('dealerCardVisuals');
     dealerVisuals.innerHTML = '';
     dealerHand.forEach(card => {
