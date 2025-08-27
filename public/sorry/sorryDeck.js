@@ -1,5 +1,7 @@
 class Deck {
     constructor() {
+        this.special = ["Move From start or move forward 1", "Draw again and move from start or move forward 2", null, "Move backward 4", null, null, "Move forward 7 or split between 2 pawns", null, null,
+            "Move forward 10 or backward 1", "Move forward 11 or swap places with an opponent", null, "Move a pawn from start and replace an opponent's pawn"];
         this.cards = [];
         this.createDeck();
     }

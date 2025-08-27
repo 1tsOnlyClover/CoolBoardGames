@@ -1,6 +1,5 @@
 const minesweeperCanvas = document.getElementById("game-canvas");
 const ctx = minesweeperCanvas.getContext("2d");
-let turn = 1;
 
 function getCursorPosition(canvas, event) {
     const rect = canvas.getBoundingClientRect()
@@ -17,25 +16,15 @@ let width = minesweeperCanvas.width;
 let height = minesweeperCanvas.height;
 let firstClick = true;
 let deck = new Deck();
+let currentPlayer = 0;
+let cardDrawn = null;
 
 minesweeperCanvas.addEventListener('click', function(e) {
     pos = getCursorPosition(minesweeperCanvas, e)
     determineCol();
     determineRow();
     console.log("Column clicked: " + colClicked + ", Row clicked: " + rowClicked);
-    if (firstClick) {
-        firstClick = false;
-        do {
-            clearBoard();
-            newGame();
-        } while (board[rowClicked][colClicked] != 0);
-        setupBoard();
-        //handleClick(rowClicked, colClicked);
-    } //else {
-    //     if (clicksHandled[rowClicked][colClicked] != 1) {
-    //         handleClick(rowClicked, colClicked);
-    //     }
-    // }
+    handleClick(pos);
 });
 
 function determineCol() {
@@ -106,19 +95,26 @@ function determineRow() {
     }
 }
 
-const homeLocations = {
+const startLocations = {
     "#ff00005c": {x: 11, y: 13.5},
     "#73ff005c": {x: 1.5, y: 11},
     "#0048ff5c": {x: 13.5, y: 4},
     "#8800ff5c": {x: 4, y: 1.5}
 };
 
+const homeLocations = {
+    "#ff00005c": {x: 13, y: 8.5},
+    "#73ff005c": {x: 6.5, y: 13},
+    "#0048ff5c": {x: 8.5, y: 2},
+    "#8800ff5c": {x: 2, y: 6.5}
+};
+
 
 const pieceLocations = {
-    "#ff00005c": [homeLocations["#ff00005c"], homeLocations["#ff00005c"], homeLocations["#ff00005c"], homeLocations["#ff00005c"]],
-    "#73ff005c": [homeLocations["#73ff005c"], homeLocations["#73ff005c"], homeLocations["#73ff005c"], homeLocations["#73ff005c"]],
-    "#0048ff5c": [homeLocations["#0048ff5c"], homeLocations["#0048ff5c"], homeLocations["#0048ff5c"], homeLocations["#0048ff5c"]],
-    "#8800ff5c": [homeLocations["#8800ff5c"], homeLocations["#8800ff5c"], homeLocations["#8800ff5c"], homeLocations["#8800ff5c"]]
+    "#ff00005c": [startLocations["#ff00005c"], startLocations["#ff00005c"], startLocations["#ff00005c"], startLocations["#ff00005c"]],
+    "#73ff005c": [startLocations["#73ff005c"], startLocations["#73ff005c"], startLocations["#73ff005c"], startLocations["#73ff005c"]],
+    "#0048ff5c": [startLocations["#0048ff5c"], startLocations["#0048ff5c"], startLocations["#0048ff5c"], startLocations["#0048ff5c"]],
+    "#8800ff5c": [startLocations["#8800ff5c"], startLocations["#8800ff5c"], startLocations["#8800ff5c"], startLocations["#8800ff5c"]]
 };
 
 // 0 will be an unfilled space and -1 will be a mine
@@ -157,6 +153,11 @@ document.addEventListener("DOMContentLoaded", function() {
 
 // will clear whatever is currently displayed and will clear the logical board, it will also set up the display 
 function setupBoard() {
+    drawBoard();
+}
+
+function drawBoard() {
+
     ctx.clearRect(0,0,width,height)
     ctx.fillStyle = "white";
     ctx.fillRect(0,0,width,height);
@@ -218,9 +219,12 @@ function setupBoard() {
     drawSquare((width/boardSize * 3.5), (height/boardSize * 1), (width/boardSize * 2), "#8800ff5c");
     drawSquare((width/boardSize * 10.5), (height/boardSize * 13), (width/boardSize * 2), "#ff00005c");
 
-    drawCardPile((width/boardSize * 6), (height/boardSize * 5.5), (height/boardSize * 3), (width/boardSize * 2), 45, "#00cbf9ff", "Discard");
-    drawCardPile((width/boardSize * 8), (height/boardSize * 7.5), (height/boardSize * 3), (width/boardSize * 2), 45, "#00cbf9ff", "Draw Pile");
-    // printBoard();
+    drawCardPile((width/boardSize * 6), (height/boardSize * 9), (height/boardSize * 2), (width/boardSize * 5), "#00cbf9ff", "Draw Pile");
+    if (cardDrawn) {
+        drawCardPile((width/boardSize * 6), (height/boardSize * 5), (height/boardSize * 2), (width/boardSize * 5), "#00cbf9ff", cardDrawn, deck.special[cardDrawn-1]);
+    } else {
+        drawCardPile((width/boardSize * 6), (height/boardSize * 5), (height/boardSize * 2), (width/boardSize * 5), "#00cbf9ff", "Discard");
+    }
 
     drawPieces();
 }
@@ -274,29 +278,66 @@ function drawSquare(x, y, size, color) {
     ctx.strokeRect(x, y, size, size);
 }
 
-function drawCardPile(x, y, length, width, angle, color, label) {
-    ctx.save();
-    ctx.translate(x + width / 2, y + length / 2);
-    ctx.rotate(angle*Math.PI/180);
+function drawCardPile(x, y, length, width, color, label1, label2) {
     ctx.fillStyle = color;
-    ctx.fillRect(-width / 2, -length / 2, width, length);
+    ctx.fillRect(x, y, width, length);
     ctx.strokeStyle = "#000000ff";
-    ctx.strokeRect(-width / 2, -length / 2, width, length);
-    ctx.restore();
-    ctx.save();
-    ctx.translate(x + width / 2, y + length / 2);
-    ctx.rotate(-angle*Math.PI/180);
-    ctx.font = "20px Comic Sans MS";
+    ctx.strokeRect(x, y, width, length);
+    ctx.font = "17px Comic Sans MS";
     ctx.fillStyle = "black";
-    ctx.fillText(label, -width/2, 5);
-    ctx.restore();
+    if (label1) {
+    label1 = label1 + "";
+    }
+    if (label1 === "13") {
+        label1 = "Sorry!";
+        ctx.font = "14.5px Comic Sans MS";
+    }
+    if (label2) {
+        label2 = label2 + "";
+    }
+    console.log(label1, label2);
+    if (label2) {
+        if (label2.length > 14) {
+            //separate label2 into words
+            label2 = label2.split(" ");
+            let label2Part1 = "";
+            let label2Part2 = "";
+            for (let i = 0; i < label2.length/2; i++) {
+                label2Part1 += " " + label2[i];
+            }
+            let start = 0;
+            if (label2.length % 2 === 1) {
+                start = Math.floor(label2.length/2)+1;
+            } else {
+                start = Math.floor(label2.length/2);
+            }
+            for (let i = start; i < label2.length; i++) {
+                label2Part2 += " " + label2[i];
+            }
+            ctx.fillText(label1, x + width/2 - (label1.length+1) * 4, y + length/3);
+            if (label1 === "Sorry!") {
+                ctx.fillText(label2Part1, x + width/2 - (label2Part1.length+1) * 3.5, y + length*4/7);
+                ctx.fillText(label2Part2, x + width/2 - (label2Part2.length+1) * 3.5, y + length*5/7 + 20);
+            } else {
+                ctx.fillText(label2Part1, x + width/2 - (label2Part1.length+1) * 4, y + length*4/7);
+                ctx.fillText(label2Part2, x + width/2 - (label2Part2.length+1) * 4, y + length*5/7 + 20);
+            }
+        } else {
+            console.log(label1.length, label2.length);
+            ctx.fillText(label1, x + width/2 - (label1.length+1) * 4, y + length/3);
+            ctx.fillText(label2, x + width/2 - (label2.length+1) * 4, y + length*5/7);
+        }
+    } else {
+        console.log(label1.length);
+        ctx.fillText(label1, x + width/2 - (label1.length+1) * 4, y + length/2);
+    }
 }
 
 function drawPieces() {
     for (const color in pieceLocations) {
         for (let i = 0; i < pieceLocations[color].length; i++) {
-            if (pieceLocations[color][i] == homeLocations[color]) {
-                let { x, y } = homeLocations[color];
+            if (pieceLocations[color][i] == startLocations[color] || pieceLocations[color][i] == homeLocations[color]) {
+                let { x, y } = pieceLocations[color][i];
                 switch (i) {
                     case 0:
                         x = (x-0.5) * (width / boardSize) + width/(boardSize*2);
@@ -340,4 +381,29 @@ function placeNumberBoard(rowIndex,colIndex,number) {
     let fontSize = width/35;
     ctx.font = `${fontSize}px Comics Sans MS`;
     ctx.fillText(number, colIndex * width/16 + width/32, rowIndex * height/16 + height/32);
+}
+
+function handleClick(position) {
+    // Check if the click is on the draw pile
+    let x = (width/boardSize * 6);
+    let y = (height/boardSize * 9);
+    if (!cardDrawn && (position.x > x && position.x < x + (width/boardSize * 5) && position.y > y && position.y < y + (height/boardSize * 2))) {
+        drawCard();
+        drawBoard();
+        cardDrawn = null;
+        return;
+    }
+}
+
+
+function drawCard() {
+    console.log("Clicked on card pile");
+    if (!deck.isEmpty()) {
+        cardDrawn = deck.drawCard();
+        console.log("Drew card: " + cardDrawn);
+    } else {
+        deck.createDeck();
+        cardDrawn = deck.drawCard();
+        console.log("Drew card: " + cardDrawn);
+    }
 }
