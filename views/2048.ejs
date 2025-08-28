@@ -7,11 +7,12 @@
         <meta name="keywords" content="2048, Game">
         <meta name="author" content="The Something Group">
         <title>2048</title>
-        <link rel="stylesheet" href="2048style.css">
+        <link rel="stylesheet" href="\2048\2048style.css">
     </head>
     <body>
     <header role="banner">
         <div class="container">
+            <%- include('nav.ejs') %>
             <h1>2048</h1>
             <div id="game-board"></div>
         </div>
@@ -22,20 +23,20 @@
             <canvas id="2048Canvas" width="600" height="600"></canvas>
         </div>
     </div>
-    <script src="2048logic.js"></script>
+    <script src="\2048\2048logic.js"></script>
     <main>
         <div class="game-rules">
             <h2>Game Rules</h2>
             <ul>
-                <li>Choose a size for the card Grid</li>
+                <li>you start with 2 squares of 2</li>
                                 <p></p>
-                <li>Flip Over Cards 2 at a time</li>
+                <li>Use the arrow keys to slide the squares around the board</li>
                                 <p></p>
-                <li>Flip Over 2 Cards of the same kind to remove them from the Grid</li>
+                <li>Merge 2 squares together of the same type to from a square with 2x number</li>
                                 <p></p>
-                <li>The Game Ends When The Entire Grid is Empty</li>
+                <li>You win by forming a square with the number 2048</li>
                                 <p></p>
-                <li>Have Fun!</li>
+                <li>Game Ends when no move is possible</li>
             </ul>
         </div>
     </main>
