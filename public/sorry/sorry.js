@@ -387,14 +387,31 @@ function handleClick(position) {
     // Check if the click is on the draw pile
     let x = (width/boardSize * 6);
     let y = (height/boardSize * 9);
+    let pieceClicked = clickedPiece(position);
     if (!cardDrawn && (position.x > x && position.x < x + (width/boardSize * 5) && position.y > y && position.y < y + (height/boardSize * 2))) {
         drawCard();
         drawBoard();
-        cardDrawn = null;
         return;
+    } else if (pieceClicked) {
+        console.log("Clicked on piece: " + pieceClicked.color + " " + pieceClicked.index);
     }
 }
 
+function clickedPiece(position) {
+    console.log("Checking for piece click at position: ", position);
+    console.log(pieceLocations);
+    for (const color in pieceLocations) {
+        for (let i = 0; i < pieceLocations[color].length; i++) {
+            let { x, y } = pieceLocations[color][i];
+            x = x * (width / boardSize) + width/(boardSize*3);
+            y = y * (height / boardSize) + height/(boardSize*3);
+            if (position.x > x - width/(boardSize*3) && position.x < x + width/(boardSize*3) && position.y > y - height/(boardSize*3) && position.y < y + height/(boardSize*3)) {
+                return { color, index: i };
+            }
+        }
+    }
+    return null;
+}
 
 function drawCard() {
     console.log("Clicked on card pile");
