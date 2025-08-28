@@ -12,6 +12,9 @@ body {
     align-items: center;
     gap: 20px;
     flex-direction: column;
+    padding: 3rem;
+    background-color: black;
+    color: white;
 }
 
 h1 {
@@ -71,4 +74,9 @@ path {
 
 .white {
     fill: rgb(255, 255, 255)
+}
+
+
+canvas {
+    background-color: white;
 }
