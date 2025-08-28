@@ -1,45 +1,39 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta name= "viewport" content="width=device-width, initial-scale=1.0">
-        <meta charset="UTF-8">
-        <meta name="description" content="Chess">
-        <meta name="keywords" content="Chess, Game">
-        <meta name="author" content="The Something Group">
-        <title>Chess</title>
-        <link rel="stylesheet" href="chessStyle.css">
-    </head>
-    <body>
-    <header role="banner">
-        <div class="container">
-            <h1>Chess</h1>
-            <div id="game-board"></div>
-        </div>
-    </header>
-    </body>
-    <div class="game">
-        <div id="game-board">
-        <canvas id="game-canvas" width="900" height="900"></canvas>
-        <script src="chess.js"></script>
-        </div>
+
+    <!DOCTYPE html>
+    <html lang="en">
+        
+        <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chess</title>
+    <link rel="stylesheet" href="chessStyle.css">
+</head>
+
+<body>
+    <h1>Chess</h1>
+    <div id="gameboard" ></div>
+    <div class="bars">
+        <p class="turnbar">It Is <span id="player"></span>'s Turn.</p>
+        <p class="infobar" id="info-display"></p>
+        <p class="errbar" id="err"></p>
     </div>
-    <main>
-        <div class="container">
-            <div class="reset">
-                <button id="reset-button">Reset Game</button>
-            </div>
-        </div>
-        <div class="game rules">
-            <h2>Game Rules</h2>
-            <ul>
-                <li>Each player starts with 16 pieces: 1 king, 1 queen, 2 rooks, 2 knights, 2 bishops, and 8 pawns.</li>
-                <li>The objective is to checkmate the opponent's king by placing it under attack in such a way that it cannot escape capture.</li>
-                <li>Players take turns moving one piece at a time.</li>
-                <li>Players can promote a pawn to any other piece (except a king) upon reaching the opponent's back rank.</li>
-                <li>Pieces move in specific ways: pawns forward, rooks horizontally/vertically, knights in an "L" shape, bishops diagonally, queen in any direction, and king one square in any direction.</li>
-                <li>A player can capture an opponent's piece by landing on its square.</li>
-                <li>The game can end in checkmate, stalemate, or draw by agreement.</li>
-            </ul>
-        </div>
-    </main>
+    
+    <script src="pieces.js"></script>
+    <script src="app.js"></script>
+</body>
+<main>
+    <div class="game rules">
+        <h2>Game Rules</h2>
+        <ul>
+            <li>Each player starts with 16 pieces: 1 king, 1 queen, 2 rooks, 2 knights, 2 bishops, and 8 pawns.</li>
+            <li>The objective is to checkmate the opponent's king by placing it under attack in such a way that it cannot escape capture.</li>
+            <li>Players take turns moving one piece at a time.</li>
+            <li>Players can promote a pawn to any other piece (except a king) upon reaching the opponent's back rank.</li>
+            <li>Pieces move in specific ways: pawns forward, rooks horizontally/vertically, knights in an "L" shape, bishops diagonally, queen in any direction, and king one square in any direction.</li>
+            <li>A player can capture an opponent's piece by landing on its square.</li>
+            <li>The game can end in checkmate, stalemate, or draw by agreement.</li>
+        </ul>
+    </div>
+</main>
+
 </html>
