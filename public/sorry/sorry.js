@@ -1,6 +1,5 @@
 const minesweeperCanvas = document.getElementById("game-canvas");
 const ctx = minesweeperCanvas.getContext("2d");
-let turn = 1;
 
 function getCursorPosition(canvas, event) {
     const rect = canvas.getBoundingClientRect()
@@ -9,120 +8,116 @@ function getCursorPosition(canvas, event) {
     return { x: x, y: y }
 }
 
+let boardSize = 16;
 let colClicked = 0;
 let rowClicked = 0;
 let pos = { x: 0, y: 0 };
 let width = minesweeperCanvas.width;
 let height = minesweeperCanvas.height;
 let firstClick = true;
+let deck = new Deck();
+let currentPlayer = "#ff0000FF";
+let cardDrawn = null;
 
 minesweeperCanvas.addEventListener('click', function(e) {
     pos = getCursorPosition(minesweeperCanvas, e)
     determineCol();
     determineRow();
     console.log("Column clicked: " + colClicked + ", Row clicked: " + rowClicked);
-    if (firstClick) {
-        firstClick = false;
-        do {
-            clearBoard();
-            newGame();
-        } while (board[rowClicked][colClicked] != 0);
-        setupBoard();
-        handleClick(rowClicked, colClicked);
-    } else {
-        if (clicksHandled[rowClicked][colClicked] != 1) {
-            handleClick(rowClicked, colClicked);
-        }
-    }
+    handleClick(pos);
 });
 
 function determineCol() {
-    if (pos.x < width/15) {
+    if (pos.x < width/boardSize) {
         colClicked = 0;
-    } else if (pos.x < (width/15) * 2) {
+    } else if (pos.x < (width/boardSize) * 2) {
         colClicked = 1;
-    } else if (pos.x < (width/15) * 3) {
+    } else if (pos.x < (width/boardSize) * 3) {
         colClicked = 2;
-    } else if (pos.x < (width/15) * 4) {
+    } else if (pos.x < (width/boardSize) * 4) {
         colClicked = 3;
-    } else if (pos.x < (width/15) * 5) {
+    } else if (pos.x < (width/boardSize) * 5) {
         colClicked = 4;
-    } else if (pos.x < (width/15) * 6) {
+    } else if (pos.x < (width/boardSize) * 6) {
         colClicked = 5;
-    } else if (pos.x < (width/15) * 7) {
+    } else if (pos.x < (width/boardSize) * 7) {
         colClicked = 6;
-    } else if (pos.x < (width/15) * 8) {
+    } else if (pos.x < (width/boardSize) * 8) {
         colClicked = 7;
-    } else if (pos.x < (width/15) * 9) {
+    } else if (pos.x < (width/boardSize) * 9) {
         colClicked = 8;
-    } else if (pos.x < (width/15) * 10) {
+    } else if (pos.x < (width/boardSize) * 10) {
         colClicked = 9;
-    } else if (pos.x < (width/15) * 11) {
+    } else if (pos.x < (width/boardSize) * 11) {
         colClicked = 10;
-    } else if (pos.x < (width/15) * 12) {
+    } else if (pos.x < (width/boardSize) * 12) {
         colClicked = 11;
-    } else if (pos.x < (width/15) * 13) {
+    } else if (pos.x < (width/boardSize) * 13) {
         colClicked = 12;
-    } else if (pos.x < (width/15) * 14) {
+    } else if (pos.x < (width/boardSize) * 14) {
         colClicked = 13;
-    } else if (pos.x < (width/15) * 15) {
+    } else if (pos.x < (width/boardSize) * 15) {
         colClicked = 14;
     }
 }
 
 function determineRow() {
-    if (pos.y < height/15) {
+    if (pos.y < height/boardSize) {
         rowClicked = 0;
-    } else if (pos.y < (height/15) * 2) {
+    } else if (pos.y < (height/boardSize) * 2) {
         rowClicked = 1;
-    } else if (pos.y < (height/15) * 3) {
+    } else if (pos.y < (height/boardSize) * 3) {
         rowClicked = 2;
-    } else if (pos.y < (height/15) * 4) {
+    } else if (pos.y < (height/boardSize) * 4) {
         rowClicked = 3;
-    } else if (pos.y < (height/15) * 5) {
+    } else if (pos.y < (height/boardSize) * 5) {
         rowClicked = 4;
-    } else if (pos.y < (height/15) * 6) {
+    } else if (pos.y < (height/boardSize) * 6) {
         rowClicked = 5;
-    } else if (pos.y < (height/15) * 7) {
+    } else if (pos.y < (height/boardSize) * 7) {
         rowClicked = 6;
-    } else if (pos.y < (height/15) * 8) {
+    } else if (pos.y < (height/boardSize) * 8) {
         rowClicked = 7;
-    } else if (pos.y < (height/15) * 9) {
+    } else if (pos.y < (height/boardSize) * 9) {
         rowClicked = 8;
-    } else if (pos.y < (height/15) * 10) {
+    } else if (pos.y < (height/boardSize) * 10) {
         rowClicked = 9;
-    } else if (pos.y < (height/15) * 11) {
+    } else if (pos.y < (height/boardSize) * 11) {
         rowClicked = 10;
-    } else if (pos.y < (height/15) * 12) {
+    } else if (pos.y < (height/boardSize) * 12) {
         rowClicked = 11;
-    } else if (pos.y < (height/15) * 13) {
+    } else if (pos.y < (height/boardSize) * 13) {
         rowClicked = 12;
-    } else if (pos.y < (height/15) * 14) {
+    } else if (pos.y < (height/boardSize) * 14) {
         rowClicked = 13;
-    } else if (pos.y < (height/15) * 15) {
+    } else if (pos.y < (height/boardSize) * 15) {
         rowClicked = 14;
     }
 }
 
+const startLocations = {
+    "#ff0000FF": {x: 11, y: 13.5},
+    "#73ff00FF": {x: 1.5, y: 11},
+    "#0048ffFF": {x: 13.5, y: 4},
+    "#fffb00FF": {x: 4, y: 1.5}
+};
 
-const board = [
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
-];
+// "#fffb00FF"
+
+const homeLocations = {
+    "#ff0000FF": {x: 13, y: 8.5},
+    "#73ff00FF": {x: 6.5, y: 13},
+    "#0048ffFF": {x: 8.5, y: 2},
+    "#fffb00FF": {x: 2, y: 6.5}
+};
+
+
+const pieceLocations = {
+    "#ff0000FF": [startLocations["#ff0000FF"], startLocations["#ff0000FF"], startLocations["#ff0000FF"], startLocations["#ff0000FF"]],
+    "#73ff00FF": [startLocations["#73ff00FF"], startLocations["#73ff00FF"], startLocations["#73ff00FF"], startLocations["#73ff00FF"]],
+    "#0048ffFF": [startLocations["#0048ffFF"], startLocations["#0048ffFF"], startLocations["#0048ffFF"], startLocations["#0048ffFF"]],
+    "#fffb00FF": [startLocations["#fffb00FF"], startLocations["#fffb00FF"], startLocations["#fffb00FF"], startLocations["#fffb00FF"]]
+};
 
 // 0 will be an unfilled space and -1 will be a mine
 // board[row][column]
@@ -160,85 +155,227 @@ document.addEventListener("DOMContentLoaded", function() {
 
 // will clear whatever is currently displayed and will clear the logical board, it will also set up the display 
 function setupBoard() {
+    drawBoard();
+}
+
+function drawBoard() {
+
     ctx.clearRect(0,0,width,height)
     ctx.fillStyle = "white";
     ctx.fillRect(0,0,width,height);
-    for (let row = 0; row < board.length; row++) {
-        ctx.fillStyle = "#73ff005c";
-        ctx.fillRect((width/15 * 0), (height/15 * row), width/15, height/15);
-        ctx.fillStyle = "#0048ff5c";
-        ctx.fillRect((width/15 * 14), (height/15 * row), width/15, height/15);
-        ctx.stroke();
+    ctx.lineWidth = 4;
+    for (let row = 0; row < boardSize; row++) {
+        drawSquare((width/boardSize * 0), (height/boardSize * row), (width/boardSize), "#ffffffff");
+        drawSquare((width/boardSize * 15), (height/boardSize * row), (width/boardSize), "#ffffffff");
     }
 
-    for (let col = 0; col < board.length; col++) {
-        ctx.fillStyle = "#8800ff5c";
-        ctx.fillRect((width/15 * col), (height/15 * 0), width/15, height/15);
-        ctx.fillStyle = "#ff00005c";
-        ctx.fillRect((width/15 * col), (height/15 * 14), width/15, height/15);
-        ctx.stroke();
+    for (let col = 0; col < boardSize; col++) {
+        drawSquare((width/boardSize * col), (height/boardSize * 0), (width/boardSize), "#ffffffff");
+        drawSquare((width/boardSize * col), (height/boardSize * 15), (width/boardSize), "#ffffffff");
     }
 
-    for (let row = 0; row < board.length; row++) {
-        for (let col = 0; col < board.length; col++) {
-            if (row == 0 || row == 14 || col == 0 || col == 14) {
-                ctx.beginPath();
-                ctx.strokeStyle = "#000000ff";
-                ctx.moveTo(width/15 * col, height/15 * row);
-                ctx.lineTo((width/15 * col) + (width/15), (height/15 * row));
-                ctx.lineTo((width/15 * col) + (width/15), (height/15 * row) + (height/15));
-                ctx.lineTo((width/15 * col), (height/15 * row) + (height/15));
-                ctx.lineTo((width/15 * col), (height/15 * row));
-                ctx.lineWidth = 4;
-                ctx.stroke();
-            }
+    for (let distance = 1; distance < 5; distance++) {
+        if (distance == 4 || distance == 1) {
+            drawTriangle((width/boardSize * distance), (height/boardSize * 0), (width/boardSize), "#fffb00FF", "left");
+            drawTriangle((width/boardSize * (15 - distance)), (height/boardSize * 15), (width/boardSize), "#ff0000FF", "right");
+            drawTriangle((width/boardSize * 0), (height/boardSize * (15 - distance)), (width/boardSize), "#73ff00FF", "up");
+            drawTriangle((width/boardSize * 15), (height/boardSize * distance), (width/boardSize), "#0048ffFF", "down");
+        } else{
+            drawSquare((width/boardSize * distance), (height/boardSize * 0), (width/boardSize), "#fffb00FF");
+            drawSquare((width/boardSize * (15 - distance)), (height/boardSize * 15), (width/boardSize), "#ff0000FF");
+            drawSquare((width/boardSize * 0), (height/boardSize * (15 - distance)), (width/boardSize), "#73ff00FF");
+            drawSquare((width/boardSize * 15), (height/boardSize * distance), (width/boardSize), "#0048ffFF");
         }
     }
-    // printBoard();
+    
+    
+    for (let distance = 9; distance < 14; distance++) {
+        if (distance == 13 || distance == 9) {
+            drawTriangle((width/boardSize * distance), (height/boardSize * 0), (width/boardSize), "#fffb00FF", "left");
+            drawTriangle((width/boardSize * (15 - distance)), (height/boardSize * 15), (width/boardSize), "#ff0000FF", "right");
+            drawTriangle((width/boardSize * 0), (height/boardSize * (15 - distance)), (width/boardSize), "#73ff00FF", "up");
+            drawTriangle((width/boardSize * 15), (height/boardSize * distance), (width/boardSize), "#0048ffFF", "down");
+        } else{
+            drawSquare((width/boardSize * distance), (height/boardSize * 0), (width/boardSize), "#fffb00FF");
+            drawSquare((width/boardSize * (15 - distance)), (height/boardSize * 15), (width/boardSize), "#ff0000FF");
+            drawSquare((width/boardSize * 0), (height/boardSize * (15 - distance)), (width/boardSize), "#73ff00FF");
+            drawSquare((width/boardSize * 15), (height/boardSize * distance), (width/boardSize), "#0048ffFF");
+        }
+    }
+
+
+    for (let chisel = 1; chisel < 6; chisel++) {
+        drawSquare((width/boardSize * chisel), (height/boardSize * 13), (width/boardSize), "#73ff00FF");
+        drawSquare((width/boardSize * (15 - chisel)), (height/boardSize * 2), (width/boardSize), "#0048ffFF");
+        drawSquare((width/boardSize * 2), (height/boardSize * chisel), (width/boardSize), "#fffb00FF");
+        drawSquare((width/boardSize * 13), (height/boardSize * (15 - chisel)), (width/boardSize), "#ff0000FF");
+    }
+
+    drawSquare((width/boardSize * 6), (height/boardSize * 12.5), (width/boardSize * 2), "#73ff00FF");
+    drawSquare((width/boardSize * 8), (height/boardSize * 1.5), (width/boardSize * 2), "#0048ffFF");
+    drawSquare((width/boardSize * 1.5), (height/boardSize * 6), (width/boardSize * 2), "#fffb00FF");
+    drawSquare((width/boardSize * 12.5), (height/boardSize * 8), (width/boardSize * 2), "#ff0000FF");
+    
+    drawSquare((width/boardSize * 1), (height/boardSize * 10.5), (width/boardSize * 2), "#73ff00FF");
+    drawSquare((width/boardSize * 13), (height/boardSize * 3.5), (width/boardSize * 2), "#0048ffFF");
+    drawSquare((width/boardSize * 3.5), (height/boardSize * 1), (width/boardSize * 2), "#fffb00FF");
+    drawSquare((width/boardSize * 10.5), (height/boardSize * 13), (width/boardSize * 2), "#ff0000FF");
+
+    drawCardPile((width/boardSize * 6), (height/boardSize * 9), (height/boardSize * 2), (width/boardSize * 5), "#00cbf9ff", "Draw Pile");
+    if (cardDrawn) {
+        drawCardPile((width/boardSize * 6), (height/boardSize * 5), (height/boardSize * 2), (width/boardSize * 5), "#00cbf9ff", cardDrawn, deck.special[cardDrawn-1]);
+    } else {
+        drawCardPile((width/boardSize * 6), (height/boardSize * 5), (height/boardSize * 2), (width/boardSize * 5), "#00cbf9ff", "Discard");
+    }
+
+    drawPieces();
+}
+
+function drawTriangle(x, y, size, color, direction) {
+    ctx.beginPath();
+    if (direction === "up") {
+        x = x + width/(boardSize*2);
+        ctx.moveTo(x, y);
+        ctx.lineTo(x + size / 2, y + size);
+        ctx.lineTo(x - size / 2, y + size);
+    } else if (direction === "down") {
+        y = y + width/boardSize;
+        x = x + width/(boardSize*2);
+        ctx.moveTo(x, y);
+        ctx.lineTo(x + size / 2, y - size);
+        ctx.lineTo(x - size / 2, y - size);
+    } else if (direction === "left") {
+        y = y + width/(boardSize*2);
+        x = x + width/(boardSize);
+        ctx.moveTo(x, y);
+        ctx.lineTo(x - size, y + size / 2);
+        ctx.lineTo(x - size, y - size / 2);
+    } else if (direction === "right") {
+        y = y + width/(boardSize*2);
+        ctx.moveTo(x, y);
+        ctx.lineTo(x + size, y - size / 2);
+        ctx.lineTo(x + size, y + size / 2);
+    }
+    ctx.closePath();
+    ctx.fillStyle = color;
+    ctx.fill();
+    ctx.strokeStyle = "#000000ff";
+    ctx.stroke();
+}
+
+function drawCircle(x, y, radius, color) {
+    ctx.beginPath();
+    ctx.arc(x, y, radius, 0, 2 * Math.PI);
+    ctx.closePath();
+    ctx.fillStyle = color;
+    ctx.fill();
+    ctx.strokeStyle = "#000000ff";
+    ctx.stroke();
+}
+
+function drawSquare(x, y, size, color) {
+    ctx.fillStyle = color;
+    ctx.fillRect(x, y, size, size);
+    ctx.strokeStyle = "#000000ff";
+    ctx.strokeRect(x, y, size, size);
+}
+
+function drawCardPile(x, y, length, width, color, label1, label2) {
+    ctx.fillStyle = color;
+    ctx.fillRect(x, y, width, length);
+    ctx.strokeStyle = "#000000ff";
+    ctx.strokeRect(x, y, width, length);
+    ctx.font = "17px Comic Sans MS";
+    ctx.fillStyle = currentPlayer;
+    if (label1) {
+    label1 = label1 + "";
+    }
+    if (label1 === "13") {
+        label1 = "Sorry!";
+        ctx.font = "14.5px Comic Sans MS";
+    }
+    if (label2) {
+        label2 = label2 + "";
+    }
+    console.log(label1, label2);
+    if (label2) {
+        if (label2.length > 14) {
+            //separate label2 into words
+            label2 = label2.split(" ");
+            let label2Part1 = "";
+            let label2Part2 = "";
+            for (let i = 0; i < label2.length/2; i++) {
+                label2Part1 += " " + label2[i];
+            }
+            let start = 0;
+            if (label2.length % 2 === 1) {
+                start = Math.floor(label2.length/2)+1;
+            } else {
+                start = Math.floor(label2.length/2);
+            }
+            for (let i = start; i < label2.length; i++) {
+                label2Part2 += " " + label2[i];
+            }
+            ctx.fillText(label1, x + width/2 - (label1.length+1) * 4, y + length/3);
+            if (label1 === "Sorry!") {
+                ctx.fillText(label2Part1, x + width/2 - (label2Part1.length+1) * 3.5, y + length*4/7);
+                ctx.fillText(label2Part2, x + width/2 - (label2Part2.length+1) * 3.5, y + length*5/7 + 20);
+            } else {
+                ctx.fillText(label2Part1, x + width/2 - (label2Part1.length+1) * 4, y + length*4/7);
+                ctx.fillText(label2Part2, x + width/2 - (label2Part2.length+1) * 4, y + length*5/7 + 20);
+            }
+        } else {
+            console.log(label1.length, label2.length);
+            ctx.fillText(label1, x + width/2 - (label1.length+1) * 4, y + length/3);
+            ctx.fillText(label2, x + width/2 - (label2.length+1) * 4, y + length*5/7);
+        }
+    } else {
+        console.log(label1.length);
+        ctx.fillText(label1, x + width/2 - (label1.length+1) * 4, y + length/2);
+    }
+}
+
+function drawPieces() {
+    for (const color in pieceLocations) {
+        for (let i = 0; i < pieceLocations[color].length; i++) {
+            if (pieceLocations[color][i] == startLocations[color] || pieceLocations[color][i] == homeLocations[color]) {
+                let { x, y } = pieceLocations[color][i];
+                switch (i) {
+                    case 0:
+                        x = (x-0.5) * (width / boardSize) + width/(boardSize*2);
+                        y = (y-0.5) * (height / boardSize) + height/(boardSize*2);
+                        drawCircle(x, y, width / (boardSize*3), color);
+                        break;
+                    case 1:
+                        x = (x+0.5) * (width / boardSize) + width/(boardSize*2);
+                        y = (y-0.5) * (height / boardSize) + height/(boardSize*2);
+                        drawCircle(x, y, width / (boardSize*3), color);
+                        break;
+                    case 2:
+                        x = (x+0.5) * (width / boardSize) + width/(boardSize*2);
+                        y = (y+0.5) * (height / boardSize) + height/(boardSize*2);
+                        drawCircle(x, y, width / (boardSize*3), color);
+                        break;
+                    case 3:
+                        x = (x-0.5) * (width / boardSize) + width/(boardSize*2);
+                        y = (y+0.5) * (height / boardSize) + height/(boardSize*2);
+                        drawCircle(x, y, width / (boardSize*3), color);
+                        break;
+                }
+            } else {
+                let { x, y } = pieceLocations[color][i];
+                x = x * (width / boardSize) + width/(boardSize*2);
+                y = y * (height / boardSize) + height/(boardSize*2);
+                drawCircle(x, y, width / (boardSize*3), color);
+             }
+        }
+    }
 }
 
 setupBoard(); // initially set up the board
-    
-function newGame() {
-    clearBoard();
-    setupBoard();
-}
 
-function handleClick(row, col) {
-    if (board[row][col] == -1) {
-        // boom();
-    } else {
-        if (board[row][col] != 0) {
-            ctx.fillStyle = clearingHex;
-            ctx.fillRect((width/16 * col)+2, (height/16 * row)+2, width/16-4, height/16-4);
-            fillSpaceNumber(row, col, board[row][col]);
-            clicksHandled[row][col] = 1;
-        } else {
-            if (clicksHandled[row][col] != 1) {
-                handleClearings(row, col);
-                clicksHandled[row][col] = 1;
-            }
-        }
-    }
-    if (winDetection()) {
-        ctx.fillStyle = "blue";
-        let fontSize = width / 15;
-        ctx.font = `${fontSize}px Comics Sans MS`;
-        ctx.fillText("You Win!", width / 3, height / 2);
-    }
-    return;
-}
 
 function winDetection() {
-    clickCount = 0;
-    for (let row = 0; row < board.length; row++) {
-        for (let col = 0; col < board.length; col++) {
-            if (board[row][col] != -1 && clicksHandled[row][col] == 1) {
-                clickCount++;
-            }
-        }
-    }
-    return clickCount == (board.length * board.length - 40);
 }
 
 function placeNumberBoard(rowIndex,colIndex,number) {
@@ -246,4 +383,262 @@ function placeNumberBoard(rowIndex,colIndex,number) {
     let fontSize = width/35;
     ctx.font = `${fontSize}px Comics Sans MS`;
     ctx.fillText(number, colIndex * width/16 + width/32, rowIndex * height/16 + height/32);
+}
+
+function handleClick(position) {
+    // Check if the click is on the draw pile
+    let x = (width/boardSize * 6);
+    let y = (height/boardSize * 9);
+    let pieceClicked = clickedPiece(position);
+    if (!cardDrawn && (position.x > x && position.x < x + (width/boardSize * 5) && position.y > y && position.y < y + (height/boardSize * 2))) {
+        drawCard();
+        while (!movesPossible()) {
+            currentPlayer = nextPlayer(currentPlayer);
+            // cardDrawn = null;
+            drawCard();
+        }
+        drawBoard();
+        return;
+    } else if (pieceClicked) {
+        console.log("Clicked on piece: " + pieceClicked.color + " " + pieceClicked.index);
+        if (pieceClicked.color === currentPlayer) {
+            if (handlePieceMovement(pieceClicked)) {
+                let landedOnPiece = checkLandOnPiece(pieceClicked);
+                if (landedOnPiece.color != pieceClicked.color) {
+                    pieceLocations[landedOnPiece.color][landedOnPiece.index] = startLocations[landedOnPiece.color];
+                }
+                if (cardDrawn != "2") {
+                    currentPlayer = nextPlayer(currentPlayer);
+                    cardDrawn = null;
+                } else {
+                    cardDrawn = null;
+                }
+            }
+        }
+    }
+    drawBoard();
+}
+
+function nextPlayer(currentPlayer) {
+    switch (currentPlayer) {
+        case "#ff0000FF":
+            return "#73ff00FF";
+        case "#73ff00FF":
+            return "#fffb00FF";
+        case "#fffb00FF":
+            return "#0048ffFF";
+        case "#0048ffFF":
+            return "#ff0000FF";
+    }
+}
+
+function handlePieceMovement(piece) {
+    console.log("Handling movement for piece: " + piece.color + " " + piece.index);
+    let tempLocation = { x: 0, y: 0 };
+    for (let i = 0; i < pieceLocations[piece.color][piece.index].x; i++) {
+        if (pieceLocations[piece.color][piece.index].x == tempLocation.x) {
+            break;
+        } else {
+            tempLocation.x++;
+        }
+    }
+    for (let i = 0; i < pieceLocations[piece.color][piece.index].y; i++) {
+        if (pieceLocations[piece.color][piece.index].y == tempLocation.y) {
+            break;
+        } else {
+            tempLocation.y++;
+        }
+    }
+    tempLocation.y = pieceLocations[piece.color][piece.index].y;
+    if (startLocations[piece.color].x == pieceLocations[piece.color][piece.index].x && startLocations[piece.color].y == pieceLocations[piece.color][piece.index].y) {
+        console.log("Piece is at its starting position.");
+        if (cardDrawn == "1" || cardDrawn == "2") {
+            switch (piece.color) {
+                case "#ff0000FF":
+                    tempLocation = { x: 11, y: 15 };
+                    break;
+                case "#73ff00FF":
+                    tempLocation = { x: 0, y: 11 };
+                    break;
+                case "#0048ffFF":
+                    tempLocation = { x: 15, y: 4 };
+                    break;
+                case "#fffb00FF":
+                    tempLocation = { x: 4, y: 0 };
+                    break;
+                }
+        } else if (cardDrawn == "13") {
+            // sorry logic
+        }
+    } else if (cardDrawn == "4") {
+        for (let move = 0; move < cardDrawn; move++) {
+            if (tempLocation == { x: 0, y: 0 }) {
+                tempLocation.x -= 1;
+            } else if (tempLocation == { x: 0, y: 15 }) {
+                tempLocation.y += 1;
+            } else if (tempLocation == { x: 15, y: 0 }) {
+                tempLocation.y -= 1;
+            } else if (tempLocation == { x: 15, y: 15 }) {
+                tempLocation.x += 1;
+            } else {
+                switch (tempLocation.x) {
+                    case 0:
+                        tempLocation.y += 1;
+                        break;
+                    case 15:
+                        tempLocation.y -= 1;
+                            break;
+                    default:
+                        switch (tempLocation.y) {
+                            case 0:
+                                tempLocation.x -= 1;
+                                break;
+                            case 15:
+                                tempLocation.x += 1;
+                                break;
+                        }
+                        break;
+                    }
+            }
+            if (tempLocation.x > 15) {
+                tempLocation.x = 15;
+                tempLocation.y -= 1;
+            } else if (tempLocation.y > 15) {
+                tempLocation.y = 15;
+                tempLocation.x += 1;
+            } else if (tempLocation.x < 0) {
+                tempLocation.x = 0;
+                tempLocation.y += 1;
+            } else if (tempLocation.y < 0) {
+                tempLocation.y = 0;
+                tempLocation.x -= 1;
+            }
+        }
+    } else {
+        for (let move = 0; move < cardDrawn; move++) {
+            if (tempLocation.x == 0 && tempLocation.y == 0) {
+                tempLocation.x += 1;
+            } else if (tempLocation.x == 0 && tempLocation.y == 15) {
+                tempLocation.y -= 1;
+            } else if (tempLocation.x == 15 && tempLocation.y == 0) {
+                tempLocation.x += 1;
+            } else if (tempLocation.x == 15 && tempLocation.y == 15) {
+                tempLocation.x -= 1;
+            } else {
+                switch (tempLocation.x) {
+                    case 0:
+                        tempLocation.y -= 1;
+                        break;
+                    case 15:
+                        tempLocation.y += 1;
+                        break;
+                    default:
+                        switch (tempLocation.y) {
+                            case 0:
+                                tempLocation.x += 1;
+                                break;
+                            case 15:
+                                tempLocation.x -= 1;
+                                break;
+                        }
+                        break;
+                }
+            }
+            if (tempLocation.x > 15) {
+                tempLocation.x = 15;
+                tempLocation.y += 1;
+            } else if (tempLocation.y > 15) {
+                tempLocation.y = 15;
+                tempLocation.x -= 1;
+            } else if (tempLocation.x < 0) {
+                tempLocation.x = 0;
+                tempLocation.y -= 1;
+            } else if (tempLocation.y < 0) {
+                tempLocation.y = 0;
+                tempLocation.x += 1;
+            }
+        }
+    }
+    for (let i = 0; i < pieceLocations[piece.color].length; i++) {
+        if (pieceLocations[piece.color][i].x == tempLocation.x && pieceLocations[piece.color][i].y == tempLocation.y) {
+            return false;
+        }
+    }
+    pieceLocations[piece.color][piece.index] = tempLocation;
+    return true;
+}
+
+function checkIfSafe(piece) {
+}
+
+function checkLandOnPiece(piece) {
+    const { x, y } = pieceLocations[piece.color][piece.index];
+    // Check if the piece is landing on another piece
+    for (const color in pieceLocations) {
+        for (let i = 0; i < pieceLocations[color].length; i++) {
+            if (pieceLocations[color][i].x === x && pieceLocations[color][i].y === y) {
+                return { color, index: i };
+            }
+        }
+    }
+    return false;
+}
+
+function clickedPiece(position) {
+    console.log("Checking for piece click at position: ", position);
+    console.log(pieceLocations);
+    for (const color in pieceLocations) {
+        for (let i = 0; i < pieceLocations[color].length; i++) {
+            let { x, y } = pieceLocations[color][i];
+            x = x * (width / boardSize) + width/(boardSize*3);
+            y = y * (height / boardSize) + height/(boardSize*3);
+            if (pieceLocations[color][i] == startLocations[color]) {
+                //check start position instead of piece position
+                x = startLocations[color].x * (width / boardSize) + width/(boardSize*3);
+                y = startLocations[color].y * (height / boardSize) + height/(boardSize*3);
+                if (position.x > x - width/(boardSize) && position.x < x + width/(boardSize) && position.y > y - height/(boardSize) && position.y < y + height/(boardSize)) {
+                    if (color == currentPlayer) {
+                        return { color, index: i };
+                    }
+                }
+            }
+            if (position.x > x - width/(boardSize*3) && position.x < x + width/(boardSize*3) && position.y > y - height/(boardSize*3) && position.y < y + height/(boardSize*3)) {
+                if (color == currentPlayer) {
+                    return { color, index: i };
+                }
+            }
+        }
+    }
+    return null;
+}
+
+function movesPossible() {
+    let possible = false;
+    for (let i = 0; i < pieceLocations[currentPlayer].length; i++) {
+        const piece = { color: currentPlayer, index: i };
+        if (pieceLocations[currentPlayer][i] == startLocations[currentPlayer] && (cardDrawn == "1" || cardDrawn == "2")) {
+            possible = true;
+            return possible;
+        } else if (pieceLocations[currentPlayer][i] != startLocations[currentPlayer]) {
+            possible = true;
+            return possible;
+        }
+        // else if (!checkIfSafe(piece)) {
+        //     possible = true;
+        //     return possible;
+        // }
+    }
+    return possible;
+}
+
+function drawCard() {
+    console.log("Clicked on card pile");
+    if (!deck.isEmpty()) {
+        cardDrawn = deck.drawCard();
+        console.log("Drew card: " + cardDrawn);
+    } else {
+        deck.createDeck();
+        cardDrawn = deck.drawCard();
+        console.log("Drew card: " + cardDrawn);
+    }
 }

@@ -9,6 +9,9 @@ let displayBoard;
 
 let designMap = {};
 
+let backgroundPatterns = [];
+
+
 function printBoard() {
     let str = "";
     for (let row = 0; row < board.length; row++) {
@@ -486,6 +489,7 @@ function display() {
     ctx.clearRect(0,0,memoryCanvas.width,memoryCanvas.height);
     ctx.fillStyle = "rgba(19, 164, 212, 1)";
     ctx.fillRect(0,0,memoryCanvas.width,memoryCanvas.height);
+    displayBackground();
     if (inGame) {
         displayGame();
     } else {
@@ -555,19 +559,41 @@ memoryCanvas.addEventListener('click', function(e) {
 
 display();
 
-function pentagram(xPos, yPos, size) {
-    ctx.lineWidth = size / 15;
-    ctx.strokeStyle = "black";
-    ctx.beginPath();
+const intervalId = setInterval(() => {
+    console.log("Event handler running...");
+    display();
+}, 17);
 
-    ctx.moveTo(xPos + (size * (0)), yPos + (size * (0)), size);
-    ctx.lineTo(xPos + (size * (0 + 1)), yPos + (size * (0)), size);
-    ctx.lineTo(xPos + (size * (0 + 1 - 0.809)), yPos + (size * (0 + 0.588)), size);
-    ctx.lineTo(xPos + (size * (0 + 1 - 0.809 + 0.309)), yPos + (size * (0 + 0.588 - 0.951)), size);
-    ctx.lineTo(xPos + (size * (0 + 1 - 0.809 + 0.309 + 0.309)), yPos + (size * (0 + 0.588 - 0.951 + 0.951)), size);
-    ctx.lineTo(xPos + (size * (0 + 1 - 0.809 + 0.309 + 0.309 - 0.809)), yPos + (size * (0 + 0.588 - 0.951 + 0.951 - 0.588)), size);
-    ctx.lineTo(xPos + (size * (0 + 1)), yPos + (size * (0)), size);
+class backgroundPattern {
+    constructor(xPos, yPos, designType) {
+        this.xPos = xPos;
+        this.yPos = yPos;
+        this.designType = designType;
+    }
 
-
-    ctx.stroke();
+    draw() {
+        SoloDesign.draw(this.xPos, this.yPos, 80, this.designType,"rgba(151, 216, 237, 1)")
+    }
 }
+
+
+
+function initPatterns() {
+    
+}
+
+function displayBackground() {
+    for (let i = 0; i < backgroundPatterns.length; i++) {
+        backgroundPatterns[i].draw();
+        backgroundPatterns[i].yPos += 1.5;
+        if (backgroundPatterns[i].yPos > 700) {
+            backgroundPatterns.splice(i,1);
+        }
+    }
+    if (nextInt(50) == 0) {
+        backgroundPatterns.push(new backgroundPattern(nextInt(850), -80, nextInt(10)));
+        console.log("pushed new pattern")
+    }
+}
+
+initPatterns();

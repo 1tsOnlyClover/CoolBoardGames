@@ -27,6 +27,14 @@ app.get("/connectFour", (req, res) => {
 
 });
 
+app.get("/snakes-n-ladders", (req, res) => {
+    // let model = {
+    //     similarGames: similarGames
+    // };
+    res.render("snakes-n-ladders");
+
+});
+
 app.get("/sudoku", (req, res) => {
     // let model = {
     //     similarGames: similarGames
@@ -80,6 +88,14 @@ app.get("/sorry", (req, res) => {
     //     similarGames: similarGames
     // };
     res.render("sorry");
+
+});
+
+app.get("/2048", (req, res) => {
+    // let model = {
+    //     similarGames: similarGames
+    // };
+    res.render("2048");
 
 });
 
