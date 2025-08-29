@@ -409,9 +409,7 @@ function handleClick(position) {
                 }
                 if (cardDrawn != "2") {
                     currentPlayer = nextPlayer(currentPlayer);
-                }
-                if (landedOnPiece.color == pieceClicked.color && landedOnPiece.index != pieceClicked.index) {
-                    currentPlayer = pieceClicked.color;
+                    cardDrawn = null;
                 } else {
                     cardDrawn = null;
                 }
@@ -436,7 +434,22 @@ function nextPlayer(currentPlayer) {
 
 function handlePieceMovement(piece) {
     console.log("Handling movement for piece: " + piece.color + " " + piece.index);
-    tempLocation = pieceLocations[piece.color][piece.index];
+    let tempLocation = { x: 0, y: 0 };
+    for (let i = 0; i < pieceLocations[piece.color][piece.index].x; i++) {
+        if (pieceLocations[piece.color][piece.index].x == tempLocation.x) {
+            break;
+        } else {
+            tempLocation.x++;
+        }
+    }
+    for (let i = 0; i < pieceLocations[piece.color][piece.index].y; i++) {
+        if (pieceLocations[piece.color][piece.index].y == tempLocation.y) {
+            break;
+        } else {
+            tempLocation.y++;
+        }
+    }
+    tempLocation.y = pieceLocations[piece.color][piece.index].y;
     if (startLocations[piece.color].x == pieceLocations[piece.color][piece.index].x && startLocations[piece.color].y == pieceLocations[piece.color][piece.index].y) {
         console.log("Piece is at its starting position.");
         if (cardDrawn == "1" || cardDrawn == "2") {
@@ -547,7 +560,7 @@ function handlePieceMovement(piece) {
         }
     }
     for (let i = 0; i < pieceLocations[piece.color].length; i++) {
-        if (pieceLocations[piece.color][i].x === tempLocation.x && pieceLocations[piece.color][i].y === tempLocation.y) {
+        if (pieceLocations[piece.color][i].x == tempLocation.x && pieceLocations[piece.color][i].y == tempLocation.y) {
             return false;
         }
     }
