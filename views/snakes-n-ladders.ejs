@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name= "viewport" content="width=device-width, initial-scale=1.0">
+        <meta charset="UTF-8">
+        <meta name="description" content="checkers Game">
+        <meta name="keywords" content="Checkers, Game">
+        <meta name="author" content="The Something Group">
+        <title>Checkers</title>
+        <link rel="stylesheet" href="/snakes-n-ladders/snakes-n-ladders.css">
+    </head>
+    <header role="banner">
+        <div class="container">
+            <%- include('nav.ejs') %>
+            <h1>Snakes And Ladders</h1>
+            <div id="game-board"></div>
+        </div>
+    </header>
+<body>
+    <div class="game-layout">
+        <div class="game-rules">
+            <h2>Game Rules</h2>
+            <ul>
+                <li>
+                    This game is on a 10 x 10 board that contains snakes (green lines) and ladders (brown lines).
+                </li>
+                <li>
+                    Both the player and the computer start at and take turns rolling 
+                    the dice and move forward the number of spaces shown.
+                </li>
+                <li>
+                    The snakes and ladders both do different things.
+                    The snakes take you from the top of the line and bring you to the base of it. 
+                    While the ladders take you from the base of the line and bring you to the top of it.
+                </li>
+                <li>
+                    If you over shoot 100, you bounce back! so make sure that you hit 100 exactly.
+                </li>
+                <li>
+                    First one to hit 100 wins the game!
+                </li>
+            </ul>
+        </div>
+        <div class="main-game-wrapper">
+            <div class="above-game-container">
+                <div id="scoreBoard">Player: 1 | Computer: 1</div>
+            </div>
+            <canvas id="board" height="500" width="500"></canvas>
+            <br>
+            <div id="diceResult"></div>
+            <button id="rollBtn">
+                <img src="/snakes-n-ladders/dice.png" alt="Roll Dice" width="60" height="60">
+            </button>
+            <br>
+            <button id="resetBtn">Reset Game</button>
+        </div>
+        <div class="side-game-container">
+            <div id="playerEvent"></div>
+            <div id="computerEvent"></div>
+            <div id="rollResult">Start Game</div>
+        </div>
+        
+    </div>
+</body>
+    <script src="/snakes-n-ladders/snakes-n-ladders.js"></script>
+</html>
