@@ -16,7 +16,7 @@ let width = minesweeperCanvas.width;
 let height = minesweeperCanvas.height;
 let firstClick = true;
 let deck = new Deck();
-let currentPlayer = 0;
+let currentPlayer = "#ff0000FF";
 let cardDrawn = null;
 
 minesweeperCanvas.addEventListener('click', function(e) {
@@ -96,25 +96,27 @@ function determineRow() {
 }
 
 const startLocations = {
-    "#ff00005c": {x: 11, y: 13.5},
-    "#73ff005c": {x: 1.5, y: 11},
-    "#0048ff5c": {x: 13.5, y: 4},
-    "#8800ff5c": {x: 4, y: 1.5}
+    "#ff0000FF": {x: 11, y: 13.5},
+    "#73ff00FF": {x: 1.5, y: 11},
+    "#0048ffFF": {x: 13.5, y: 4},
+    "#fffb00FF": {x: 4, y: 1.5}
 };
 
+// "#fffb00FF"
+
 const homeLocations = {
-    "#ff00005c": {x: 13, y: 8.5},
-    "#73ff005c": {x: 6.5, y: 13},
-    "#0048ff5c": {x: 8.5, y: 2},
-    "#8800ff5c": {x: 2, y: 6.5}
+    "#ff0000FF": {x: 13, y: 8.5},
+    "#73ff00FF": {x: 6.5, y: 13},
+    "#0048ffFF": {x: 8.5, y: 2},
+    "#fffb00FF": {x: 2, y: 6.5}
 };
 
 
 const pieceLocations = {
-    "#ff00005c": [startLocations["#ff00005c"], startLocations["#ff00005c"], startLocations["#ff00005c"], startLocations["#ff00005c"]],
-    "#73ff005c": [startLocations["#73ff005c"], startLocations["#73ff005c"], startLocations["#73ff005c"], startLocations["#73ff005c"]],
-    "#0048ff5c": [startLocations["#0048ff5c"], startLocations["#0048ff5c"], startLocations["#0048ff5c"], startLocations["#0048ff5c"]],
-    "#8800ff5c": [startLocations["#8800ff5c"], startLocations["#8800ff5c"], startLocations["#8800ff5c"], startLocations["#8800ff5c"]]
+    "#ff0000FF": [startLocations["#ff0000FF"], startLocations["#ff0000FF"], startLocations["#ff0000FF"], startLocations["#ff0000FF"]],
+    "#73ff00FF": [startLocations["#73ff00FF"], startLocations["#73ff00FF"], startLocations["#73ff00FF"], startLocations["#73ff00FF"]],
+    "#0048ffFF": [startLocations["#0048ffFF"], startLocations["#0048ffFF"], startLocations["#0048ffFF"], startLocations["#0048ffFF"]],
+    "#fffb00FF": [startLocations["#fffb00FF"], startLocations["#fffb00FF"], startLocations["#fffb00FF"], startLocations["#fffb00FF"]]
 };
 
 // 0 will be an unfilled space and -1 will be a mine
@@ -174,50 +176,50 @@ function drawBoard() {
 
     for (let distance = 1; distance < 5; distance++) {
         if (distance == 4 || distance == 1) {
-            drawTriangle((width/boardSize * distance), (height/boardSize * 0), (width/boardSize), "#8800ff5c", "left");
-            drawTriangle((width/boardSize * (15 - distance)), (height/boardSize * 15), (width/boardSize), "#ff00005c", "right");
-            drawTriangle((width/boardSize * 0), (height/boardSize * (15 - distance)), (width/boardSize), "#73ff005c", "up");
-            drawTriangle((width/boardSize * 15), (height/boardSize * distance), (width/boardSize), "#0048ff5c", "down");
+            drawTriangle((width/boardSize * distance), (height/boardSize * 0), (width/boardSize), "#fffb00FF", "left");
+            drawTriangle((width/boardSize * (15 - distance)), (height/boardSize * 15), (width/boardSize), "#ff0000FF", "right");
+            drawTriangle((width/boardSize * 0), (height/boardSize * (15 - distance)), (width/boardSize), "#73ff00FF", "up");
+            drawTriangle((width/boardSize * 15), (height/boardSize * distance), (width/boardSize), "#0048ffFF", "down");
         } else{
-            drawSquare((width/boardSize * distance), (height/boardSize * 0), (width/boardSize), "#8800ff5c");
-            drawSquare((width/boardSize * (15 - distance)), (height/boardSize * 15), (width/boardSize), "#ff00005c");
-            drawSquare((width/boardSize * 0), (height/boardSize * (15 - distance)), (width/boardSize), "#73ff005c");
-            drawSquare((width/boardSize * 15), (height/boardSize * distance), (width/boardSize), "#0048ff5c");
+            drawSquare((width/boardSize * distance), (height/boardSize * 0), (width/boardSize), "#fffb00FF");
+            drawSquare((width/boardSize * (15 - distance)), (height/boardSize * 15), (width/boardSize), "#ff0000FF");
+            drawSquare((width/boardSize * 0), (height/boardSize * (15 - distance)), (width/boardSize), "#73ff00FF");
+            drawSquare((width/boardSize * 15), (height/boardSize * distance), (width/boardSize), "#0048ffFF");
         }
     }
     
     
     for (let distance = 9; distance < 14; distance++) {
         if (distance == 13 || distance == 9) {
-            drawTriangle((width/boardSize * distance), (height/boardSize * 0), (width/boardSize), "#8800ff5c", "left");
-            drawTriangle((width/boardSize * (15 - distance)), (height/boardSize * 15), (width/boardSize), "#ff00005c", "right");
-            drawTriangle((width/boardSize * 0), (height/boardSize * (15 - distance)), (width/boardSize), "#73ff005c", "up");
-            drawTriangle((width/boardSize * 15), (height/boardSize * distance), (width/boardSize), "#0048ff5c", "down");
+            drawTriangle((width/boardSize * distance), (height/boardSize * 0), (width/boardSize), "#fffb00FF", "left");
+            drawTriangle((width/boardSize * (15 - distance)), (height/boardSize * 15), (width/boardSize), "#ff0000FF", "right");
+            drawTriangle((width/boardSize * 0), (height/boardSize * (15 - distance)), (width/boardSize), "#73ff00FF", "up");
+            drawTriangle((width/boardSize * 15), (height/boardSize * distance), (width/boardSize), "#0048ffFF", "down");
         } else{
-            drawSquare((width/boardSize * distance), (height/boardSize * 0), (width/boardSize), "#8800ff5c");
-            drawSquare((width/boardSize * (15 - distance)), (height/boardSize * 15), (width/boardSize), "#ff00005c");
-            drawSquare((width/boardSize * 0), (height/boardSize * (15 - distance)), (width/boardSize), "#73ff005c");
-            drawSquare((width/boardSize * 15), (height/boardSize * distance), (width/boardSize), "#0048ff5c");
+            drawSquare((width/boardSize * distance), (height/boardSize * 0), (width/boardSize), "#fffb00FF");
+            drawSquare((width/boardSize * (15 - distance)), (height/boardSize * 15), (width/boardSize), "#ff0000FF");
+            drawSquare((width/boardSize * 0), (height/boardSize * (15 - distance)), (width/boardSize), "#73ff00FF");
+            drawSquare((width/boardSize * 15), (height/boardSize * distance), (width/boardSize), "#0048ffFF");
         }
     }
 
 
     for (let chisel = 1; chisel < 6; chisel++) {
-        drawSquare((width/boardSize * chisel), (height/boardSize * 13), (width/boardSize), "#73ff005c");
-        drawSquare((width/boardSize * (15 - chisel)), (height/boardSize * 2), (width/boardSize), "#0048ff5c");
-        drawSquare((width/boardSize * 2), (height/boardSize * chisel), (width/boardSize), "#8800ff5c");
-        drawSquare((width/boardSize * 13), (height/boardSize * (15 - chisel)), (width/boardSize), "#ff00005c");
+        drawSquare((width/boardSize * chisel), (height/boardSize * 13), (width/boardSize), "#73ff00FF");
+        drawSquare((width/boardSize * (15 - chisel)), (height/boardSize * 2), (width/boardSize), "#0048ffFF");
+        drawSquare((width/boardSize * 2), (height/boardSize * chisel), (width/boardSize), "#fffb00FF");
+        drawSquare((width/boardSize * 13), (height/boardSize * (15 - chisel)), (width/boardSize), "#ff0000FF");
     }
 
-    drawSquare((width/boardSize * 6), (height/boardSize * 12.5), (width/boardSize * 2), "#73ff005c");
-    drawSquare((width/boardSize * 8), (height/boardSize * 1.5), (width/boardSize * 2), "#0048ff5c");
-    drawSquare((width/boardSize * 1.5), (height/boardSize * 6), (width/boardSize * 2), "#8800ff5c");
-    drawSquare((width/boardSize * 12.5), (height/boardSize * 8), (width/boardSize * 2), "#ff00005c");
+    drawSquare((width/boardSize * 6), (height/boardSize * 12.5), (width/boardSize * 2), "#73ff00FF");
+    drawSquare((width/boardSize * 8), (height/boardSize * 1.5), (width/boardSize * 2), "#0048ffFF");
+    drawSquare((width/boardSize * 1.5), (height/boardSize * 6), (width/boardSize * 2), "#fffb00FF");
+    drawSquare((width/boardSize * 12.5), (height/boardSize * 8), (width/boardSize * 2), "#ff0000FF");
     
-    drawSquare((width/boardSize * 1), (height/boardSize * 10.5), (width/boardSize * 2), "#73ff005c");
-    drawSquare((width/boardSize * 13), (height/boardSize * 3.5), (width/boardSize * 2), "#0048ff5c");
-    drawSquare((width/boardSize * 3.5), (height/boardSize * 1), (width/boardSize * 2), "#8800ff5c");
-    drawSquare((width/boardSize * 10.5), (height/boardSize * 13), (width/boardSize * 2), "#ff00005c");
+    drawSquare((width/boardSize * 1), (height/boardSize * 10.5), (width/boardSize * 2), "#73ff00FF");
+    drawSquare((width/boardSize * 13), (height/boardSize * 3.5), (width/boardSize * 2), "#0048ffFF");
+    drawSquare((width/boardSize * 3.5), (height/boardSize * 1), (width/boardSize * 2), "#fffb00FF");
+    drawSquare((width/boardSize * 10.5), (height/boardSize * 13), (width/boardSize * 2), "#ff0000FF");
 
     drawCardPile((width/boardSize * 6), (height/boardSize * 9), (height/boardSize * 2), (width/boardSize * 5), "#00cbf9ff", "Draw Pile");
     if (cardDrawn) {
@@ -284,7 +286,7 @@ function drawCardPile(x, y, length, width, color, label1, label2) {
     ctx.strokeStyle = "#000000ff";
     ctx.strokeRect(x, y, width, length);
     ctx.font = "17px Comic Sans MS";
-    ctx.fillStyle = "black";
+    ctx.fillStyle = currentPlayer;
     if (label1) {
     label1 = label1 + "";
     }
@@ -390,11 +392,183 @@ function handleClick(position) {
     let pieceClicked = clickedPiece(position);
     if (!cardDrawn && (position.x > x && position.x < x + (width/boardSize * 5) && position.y > y && position.y < y + (height/boardSize * 2))) {
         drawCard();
+        while (!movesPossible()) {
+            currentPlayer = nextPlayer(currentPlayer);
+            // cardDrawn = null;
+            drawCard();
+        }
         drawBoard();
         return;
     } else if (pieceClicked) {
         console.log("Clicked on piece: " + pieceClicked.color + " " + pieceClicked.index);
+        if (pieceClicked.color === currentPlayer) {
+            if (handlePieceMovement(pieceClicked)) {
+                let landedOnPiece = checkLandOnPiece(pieceClicked);
+                if (landedOnPiece.color != pieceClicked.color) {
+                    pieceLocations[landedOnPiece.color][landedOnPiece.index] = startLocations[landedOnPiece.color];
+                }
+                if (cardDrawn != "2") {
+                    currentPlayer = nextPlayer(currentPlayer);
+                }
+                if (landedOnPiece.color == pieceClicked.color && landedOnPiece.index != pieceClicked.index) {
+                    currentPlayer = pieceClicked.color;
+                } else {
+                    cardDrawn = null;
+                }
+            }
+        }
     }
+    drawBoard();
+}
+
+function nextPlayer(currentPlayer) {
+    switch (currentPlayer) {
+        case "#ff0000FF":
+            return "#73ff00FF";
+        case "#73ff00FF":
+            return "#fffb00FF";
+        case "#fffb00FF":
+            return "#0048ffFF";
+        case "#0048ffFF":
+            return "#ff0000FF";
+    }
+}
+
+function handlePieceMovement(piece) {
+    console.log("Handling movement for piece: " + piece.color + " " + piece.index);
+    tempLocation = pieceLocations[piece.color][piece.index];
+    if (startLocations[piece.color].x == pieceLocations[piece.color][piece.index].x && startLocations[piece.color].y == pieceLocations[piece.color][piece.index].y) {
+        console.log("Piece is at its starting position.");
+        if (cardDrawn == "1" || cardDrawn == "2") {
+            switch (piece.color) {
+                case "#ff0000FF":
+                    tempLocation = { x: 11, y: 15 };
+                    break;
+                case "#73ff00FF":
+                    tempLocation = { x: 0, y: 11 };
+                    break;
+                case "#0048ffFF":
+                    tempLocation = { x: 15, y: 4 };
+                    break;
+                case "#fffb00FF":
+                    tempLocation = { x: 4, y: 0 };
+                    break;
+                }
+        } else if (cardDrawn == "13") {
+            // sorry logic
+        }
+    } else if (cardDrawn == "4") {
+        for (let move = 0; move < cardDrawn; move++) {
+            if (tempLocation == { x: 0, y: 0 }) {
+                tempLocation.x -= 1;
+            } else if (tempLocation == { x: 0, y: 15 }) {
+                tempLocation.y += 1;
+            } else if (tempLocation == { x: 15, y: 0 }) {
+                tempLocation.y -= 1;
+            } else if (tempLocation == { x: 15, y: 15 }) {
+                tempLocation.x += 1;
+            } else {
+                switch (tempLocation.x) {
+                    case 0:
+                        tempLocation.y += 1;
+                        break;
+                    case 15:
+                        tempLocation.y -= 1;
+                            break;
+                    default:
+                        switch (tempLocation.y) {
+                            case 0:
+                                tempLocation.x -= 1;
+                                break;
+                            case 15:
+                                tempLocation.x += 1;
+                                break;
+                        }
+                        break;
+                    }
+            }
+            if (tempLocation.x > 15) {
+                tempLocation.x = 15;
+                tempLocation.y -= 1;
+            } else if (tempLocation.y > 15) {
+                tempLocation.y = 15;
+                tempLocation.x += 1;
+            } else if (tempLocation.x < 0) {
+                tempLocation.x = 0;
+                tempLocation.y += 1;
+            } else if (tempLocation.y < 0) {
+                tempLocation.y = 0;
+                tempLocation.x -= 1;
+            }
+        }
+    } else {
+        for (let move = 0; move < cardDrawn; move++) {
+            if (tempLocation.x == 0 && tempLocation.y == 0) {
+                tempLocation.x += 1;
+            } else if (tempLocation.x == 0 && tempLocation.y == 15) {
+                tempLocation.y -= 1;
+            } else if (tempLocation.x == 15 && tempLocation.y == 0) {
+                tempLocation.x += 1;
+            } else if (tempLocation.x == 15 && tempLocation.y == 15) {
+                tempLocation.x -= 1;
+            } else {
+                switch (tempLocation.x) {
+                    case 0:
+                        tempLocation.y -= 1;
+                        break;
+                    case 15:
+                        tempLocation.y += 1;
+                        break;
+                    default:
+                        switch (tempLocation.y) {
+                            case 0:
+                                tempLocation.x += 1;
+                                break;
+                            case 15:
+                                tempLocation.x -= 1;
+                                break;
+                        }
+                        break;
+                }
+            }
+            if (tempLocation.x > 15) {
+                tempLocation.x = 15;
+                tempLocation.y += 1;
+            } else if (tempLocation.y > 15) {
+                tempLocation.y = 15;
+                tempLocation.x -= 1;
+            } else if (tempLocation.x < 0) {
+                tempLocation.x = 0;
+                tempLocation.y -= 1;
+            } else if (tempLocation.y < 0) {
+                tempLocation.y = 0;
+                tempLocation.x += 1;
+            }
+        }
+    }
+    for (let i = 0; i < pieceLocations[piece.color].length; i++) {
+        if (pieceLocations[piece.color][i].x === tempLocation.x && pieceLocations[piece.color][i].y === tempLocation.y) {
+            return false;
+        }
+    }
+    pieceLocations[piece.color][piece.index] = tempLocation;
+    return true;
+}
+
+function checkIfSafe(piece) {
+}
+
+function checkLandOnPiece(piece) {
+    const { x, y } = pieceLocations[piece.color][piece.index];
+    // Check if the piece is landing on another piece
+    for (const color in pieceLocations) {
+        for (let i = 0; i < pieceLocations[color].length; i++) {
+            if (pieceLocations[color][i].x === x && pieceLocations[color][i].y === y) {
+                return { color, index: i };
+            }
+        }
+    }
+    return false;
 }
 
 function clickedPiece(position) {
@@ -405,12 +579,43 @@ function clickedPiece(position) {
             let { x, y } = pieceLocations[color][i];
             x = x * (width / boardSize) + width/(boardSize*3);
             y = y * (height / boardSize) + height/(boardSize*3);
+            if (pieceLocations[color][i] == startLocations[color]) {
+                //check start position instead of piece position
+                x = startLocations[color].x * (width / boardSize) + width/(boardSize*3);
+                y = startLocations[color].y * (height / boardSize) + height/(boardSize*3);
+                if (position.x > x - width/(boardSize) && position.x < x + width/(boardSize) && position.y > y - height/(boardSize) && position.y < y + height/(boardSize)) {
+                    if (color == currentPlayer) {
+                        return { color, index: i };
+                    }
+                }
+            }
             if (position.x > x - width/(boardSize*3) && position.x < x + width/(boardSize*3) && position.y > y - height/(boardSize*3) && position.y < y + height/(boardSize*3)) {
-                return { color, index: i };
+                if (color == currentPlayer) {
+                    return { color, index: i };
+                }
             }
         }
     }
     return null;
+}
+
+function movesPossible() {
+    let possible = false;
+    for (let i = 0; i < pieceLocations[currentPlayer].length; i++) {
+        const piece = { color: currentPlayer, index: i };
+        if (pieceLocations[currentPlayer][i] == startLocations[currentPlayer] && (cardDrawn == "1" || cardDrawn == "2")) {
+            possible = true;
+            return possible;
+        } else if (pieceLocations[currentPlayer][i] != startLocations[currentPlayer]) {
+            possible = true;
+            return possible;
+        }
+        // else if (!checkIfSafe(piece)) {
+        //     possible = true;
+        //     return possible;
+        // }
+    }
+    return possible;
 }
 
 function drawCard() {
