@@ -91,6 +91,14 @@ app.get("/sorry", (req, res) => {
 
 });
 
+app.get("/2048", (req, res) => {
+    // let model = {
+    //     similarGames: similarGames
+    // };
+    res.render("2048");
+
+});
+
 app.listen(port, () => {
     console.log("express listening at: http://localhost:" + port);
 });
