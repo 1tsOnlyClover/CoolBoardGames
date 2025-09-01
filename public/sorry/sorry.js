@@ -378,13 +378,6 @@ setupBoard(); // initially set up the board
 function winDetection() {
 }
 
-function placeNumberBoard(rowIndex,colIndex,number) {
-    ctx.fillStyle = "black";
-    let fontSize = width/35;
-    ctx.font = `${fontSize}px Comics Sans MS`;
-    ctx.fillText(number, colIndex * width/16 + width/32, rowIndex * height/16 + height/32);
-}
-
 function handleClick(position) {
     // Check if the click is on the draw pile
     let x = (width/boardSize * 6);
@@ -404,8 +397,10 @@ function handleClick(position) {
         if (pieceClicked.color === currentPlayer) {
             if (handlePieceMovement(pieceClicked)) {
                 let landedOnPiece = checkLandOnPiece(pieceClicked);
-                if (landedOnPiece.color != pieceClicked.color) {
-                    pieceLocations[landedOnPiece.color][landedOnPiece.index] = startLocations[landedOnPiece.color];
+                if (landedOnPiece) {
+                    if (landedOnPiece.color != pieceClicked.color) {
+                        pieceLocations[landedOnPiece.color][landedOnPiece.index] = startLocations[landedOnPiece.color];
+                    }
                 }
                 if (cardDrawn != "2") {
                     currentPlayer = nextPlayer(currentPlayer);
@@ -432,7 +427,8 @@ function nextPlayer(currentPlayer) {
     }
 }
 
-function handlePieceMovement(piece) {
+function handlePieceMovement(piece, doorway) {
+    let enteredDoorway = doorway;
     console.log("Handling movement for piece: " + piece.color + " " + piece.index);
     let tempLocation = { x: 0, y: 0 };
     for (let i = 0; i < pieceLocations[piece.color][piece.index].x; i++) {
@@ -449,7 +445,6 @@ function handlePieceMovement(piece) {
             tempLocation.y++;
         }
     }
-    tempLocation.y = pieceLocations[piece.color][piece.index].y;
     if (startLocations[piece.color].x == pieceLocations[piece.color][piece.index].x && startLocations[piece.color].y == pieceLocations[piece.color][piece.index].y) {
         console.log("Piece is at its starting position.");
         if (cardDrawn == "1" || cardDrawn == "2") {
@@ -469,9 +464,20 @@ function handlePieceMovement(piece) {
                 }
         } else if (cardDrawn == "13") {
             // sorry logic
+        } else {
+            return false;
         }
     } else if (cardDrawn == "4") {
         for (let move = 0; move < cardDrawn; move++) {
+            isSafe = checkIfSafe(piece, tempLocation, cardDrawn - move);
+            switch (isSafe) {
+                case 14:
+                    break;
+                case -1:
+                    break;
+                default:
+                    move = isSafe;
+            }
             if (tempLocation == { x: 0, y: 0 }) {
                 tempLocation.x -= 1;
             } else if (tempLocation == { x: 0, y: 15 }) {
@@ -516,6 +522,25 @@ function handlePieceMovement(piece) {
         }
     } else {
         for (let move = 0; move < cardDrawn; move++) {
+            if (!enteredDoorway && checkIfEnterDoorway(piece, tempLocation, cardDrawn - move)) {
+                enteredDoorway = true;
+                switch (piece.color) {
+                case "#ff0000FF":
+                    tempLocation.y -= 1;
+                    break;
+                case "#73ff00FF":
+                    tempLocation.x += 1;
+                    break;
+                case "#0048ffFF":
+                    tempLocation.x -= 1;
+                    break;
+                case "#fffb00FF":
+                    tempLocation.y += 1;
+                    break;
+                }
+            } else if (checkIfSafe(piece, tempLocation, cardDrawn - move) == 14) {
+                break;
+            }
             if (tempLocation.x == 0 && tempLocation.y == 0) {
                 tempLocation.x += 1;
             } else if (tempLocation.x == 0 && tempLocation.y == 15) {
@@ -561,14 +586,165 @@ function handlePieceMovement(piece) {
     }
     for (let i = 0; i < pieceLocations[piece.color].length; i++) {
         if (pieceLocations[piece.color][i].x == tempLocation.x && pieceLocations[piece.color][i].y == tempLocation.y) {
-            return false;
+            if (!enteredDoorway) {
+                return false;
+            } else {
+                return handlePieceMovement(piece, enteredDoorway);
+            }
         }
     }
     pieceLocations[piece.color][piece.index] = tempLocation;
     return true;
 }
 
-function checkIfSafe(piece) {
+function checkIfSafe(piece, tempLocation, remainingMoves) {
+    switch (piece.color) {
+    case "#ff0000FF":
+        if (tempLocation.x == 13 && tempLocation.y < 15 && tempLocation.y > 8) {
+            if (remainingMoves < tempLocation.y - 8 && cardDrawn != "4") {
+                for (let i = 1; i <= remainingMoves; i++) {
+                    if (tempLocation.x == 13 && tempLocation.y < 15 && tempLocation.y > 8) {
+                        tempLocation.y -= 1;
+                    }
+                }
+            } else if (cardDrawn == "4") {
+                for (let i = 4; i >= 0; i--) {
+                    if (tempLocation.x == 13 && tempLocation.y < 15 && tempLocation.y > 8) {
+                        tempLocation.y += 1;
+                    } else {
+                        return i;
+                    }
+                    if (i == 0) {
+                        return i;
+                    }
+                }
+            }
+            return 14;
+        }
+        break;
+    case "#73ff00FF":
+        if (tempLocation.x > 0 && tempLocation.y == 13 && tempLocation.x < 7) {
+            if (remainingMoves < 8 - tempLocation.x && cardDrawn != "4") {
+                for (let i = 1; i <= remainingMoves; i++) {
+                    if (tempLocation.x > 0 && tempLocation.y == 13 && tempLocation.x < 7) {
+                        tempLocation.x += 1;
+                    }
+                }
+            } else if (cardDrawn == "4") {
+                for (let i = 4; i >= 0; i--) {
+                    if (tempLocation.x > 0 && tempLocation.y == 13 && tempLocation.x < 7) {
+                        tempLocation.x -= 1;
+                    } else {
+                        return i;
+                    }
+                    if (i == 0) {
+                        return i;
+                    }
+                }
+            }
+            return 14;
+        }
+        break;
+    case "#0048ffFF":
+        if (tempLocation.x < 15 && tempLocation.y == 2 && tempLocation.x > 8) {
+            if (remainingMoves < tempLocation.x - 8 && cardDrawn != "4") {
+                for (let i = 1; i <= remainingMoves; i++) {
+                    if (tempLocation.x < 15 && tempLocation.y == 2 && tempLocation.x > 8) {
+                        tempLocation.x -= 1;
+                    }
+                }
+            } else if (cardDrawn == "4") {
+                for (let i = 4; i >= 0; i--) {
+                    if (tempLocation.x < 15 && tempLocation.y == 2 && tempLocation.x > 8) {
+                        tempLocation.x += 1;
+                    } else {
+                        return i;
+                    }
+                    if (i == 0) {
+                        return i;
+                    }
+                }
+            }
+            return 14;
+        }
+        break;
+    case "#fffb00FF":
+        if (tempLocation.x == 2 && tempLocation.y > 0 && tempLocation.y < 7) {
+            if (remainingMoves < 7 - tempLocation.y  && cardDrawn != "4") {
+                for (let i = 1; i <= remainingMoves; i++) {
+                    if (tempLocation.x == 2 && tempLocation.y > 0 && tempLocation.y < 7) {
+                        tempLocation.y += 1;
+                    }
+                }
+            } else if (cardDrawn == "4") {
+                for (let i = 4; i >= 0; i--) {
+                    if (tempLocation.x == 2 && tempLocation.y > 0 && tempLocation.y < 7) {
+                        tempLocation.y -= 1;
+                    } else {
+                        return i;
+                    }
+                    if (i == 0) {
+                        return i;
+                    }
+                }
+            }
+            return 14;
+        }
+        break;
+    }
+    return -1;
+}
+
+function checkIfSafePossibles(piece, remainingMoves) {
+    let tempLocation = pieceLocations[piece.color][piece.index];
+    switch (piece.color) {
+    case "#ff0000FF":
+        if (tempLocation.x == 13 && tempLocation.y < 15 && tempLocation.y > 8 && (remainingMoves < 7 - tempLocation.y || remainingMoves == 4)) {
+            return true;
+        }
+        return false;
+    case "#73ff00FF":
+        if (tempLocation.x > 0 && tempLocation.y == 13 && tempLocation.x < 7 && (remainingMoves < 8 - tempLocation.x || remainingMoves == 4)) {
+            return true;
+        }
+        return false;
+    case "#0048ffFF":
+        if (tempLocation.x < 15 && tempLocation.y == 2 && tempLocation.x > 8 && (remainingMoves < tempLocation.x - 8 || remainingMoves == 4)) {
+            return true;
+        }
+        return false;
+    case "#fffb00FF":
+        if (tempLocation.x == 2 && tempLocation.y > 0 && tempLocation.y < 7 && (remainingMoves < 7 - tempLocation.y || remainingMoves == 4)) {
+            return true;
+        }
+        return false;
+    }
+}
+
+function checkIfEnterDoorway(piece, tempLocation, remainingMoves) {
+    switch (piece.color) {
+    case "#ff0000FF":
+        if (tempLocation.x == 13 && tempLocation.y == 15 && remainingMoves <= 6) {
+            return true;
+        }
+        break
+    case "#73ff00FF":
+        if (tempLocation.x == 0 && tempLocation.y == 13 && remainingMoves <= 6) {
+            return true;
+        }
+        break;
+    case "#0048ffFF":
+        if (tempLocation.x == 15 && tempLocation.y == 2 && remainingMoves <= 6) {
+            return true;
+        }
+        break;
+    case "#fffb00FF":
+        if (tempLocation.x == 2 && tempLocation.y == 0 && remainingMoves <= 6) {
+            return true;
+        }
+        break;
+    }
+    return false;
 }
 
 function checkLandOnPiece(piece) {
@@ -576,7 +752,7 @@ function checkLandOnPiece(piece) {
     // Check if the piece is landing on another piece
     for (const color in pieceLocations) {
         for (let i = 0; i < pieceLocations[color].length; i++) {
-            if (pieceLocations[color][i].x === x && pieceLocations[color][i].y === y) {
+            if (pieceLocations[color][i].x === x && pieceLocations[color][i].y === y && !(color === piece.color && i === piece.index)) {
                 return { color, index: i };
             }
         }
@@ -615,18 +791,19 @@ function clickedPiece(position) {
 function movesPossible() {
     let possible = false;
     for (let i = 0; i < pieceLocations[currentPlayer].length; i++) {
+        let xorP1 = (pieceLocations[currentPlayer][i].x != 0 && pieceLocations[currentPlayer][i].x != 15);
+        let xorP2 = (pieceLocations[currentPlayer][i].y != 0 && pieceLocations[currentPlayer][i].y != 15);
         const piece = { color: currentPlayer, index: i };
         if (pieceLocations[currentPlayer][i] == startLocations[currentPlayer] && (cardDrawn == "1" || cardDrawn == "2")) {
             possible = true;
             return possible;
-        } else if (pieceLocations[currentPlayer][i] != startLocations[currentPlayer]) {
+        } else if (pieceLocations[currentPlayer][i] != startLocations[currentPlayer] && (((xorP1 && !xorP2) || (!xorP1 && xorP2)))) {
+            possible = true;
+            return possible;
+        } else if (checkIfSafePossibles(piece, cardDrawn)) {
             possible = true;
             return possible;
         }
-        // else if (!checkIfSafe(piece)) {
-        //     possible = true;
-        //     return possible;
-        // }
     }
     return possible;
 }

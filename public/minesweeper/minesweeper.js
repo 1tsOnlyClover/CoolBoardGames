@@ -49,12 +49,12 @@ minesweeperCanvas.addEventListener('contextmenu', function(e) {
             flaggedBoard[rowClicked][colClicked] = 0;
         }
         if (flaggedBoard[rowClicked][colClicked] == 1) {
-            ctx.fillStyle = "#ff7418a9";
+            ctx.fillStyle = "#c62e59a9";
         } else {
             if((colClicked + rowClicked) % 2 == 0) {
-                ctx.fillStyle = "#daefcbff";
+                ctx.fillStyle = "#63bfd6ff";
             } else {
-                ctx.fillStyle = "#b3caa0ff";
+                ctx.fillStyle = "#abdbe3ff";
             }
         }
         ctx.fillRect((width/16 * colClicked)+2, (height/16 * rowClicked)+2, width/16-4, height/16-4);
@@ -235,9 +235,9 @@ function setupBoard() {
     for (let row = 0; row < board.length; row++) {
         for (let col = 0; col < board.length; col++) {
             if((col + row) % 2 == 0) {
-                ctx.fillStyle = "#daefcbff";
-            } else if(ctx.fillStyle != "#b3caa0ff") {
-                ctx.fillStyle = "#b3caa0ff";
+                ctx.fillStyle = "#63bfd6ff";
+            } else if(ctx.fillStyle != "#abdbe3ff") {
+                ctx.fillStyle = "#abdbe3ff";
             }
             ctx.fillRect((width/16 * col), (height/16 * row), width/16, height/16);
             ctx.stroke();
@@ -318,7 +318,7 @@ function winDetection() {
     return clickCount == (board.length * board.length - 40);
 }
 
-let clearingHex = "#f1d3a78e";
+let clearingHex = "#873e238e";
 
 function handleClearings(row, col) {
     clicksHandled[row][col] = 1;
@@ -366,7 +366,7 @@ function boom() {
 }
 
 function placeNumberBoard(rowIndex,colIndex,number) {
-    ctx.fillStyle = "black";
+    ctx.fillStyle = "white";
     let fontSize = width/35;
     ctx.font = `${fontSize}px Comics Sans MS`;
     ctx.fillText(number, colIndex * width/16 + width/32, rowIndex * height/16 + height/32);
