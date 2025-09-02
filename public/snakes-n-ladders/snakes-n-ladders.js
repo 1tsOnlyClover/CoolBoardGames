@@ -269,39 +269,45 @@ document.getElementById('rollBtn').addEventListener('click', () => {
     const roll2 = Math.floor(Math.random() * 6) + 1;
     const cRoll1 = Math.floor(Math.random() * 6) + 1;
     const cRoll2 = Math.floor(Math.random() * 6) + 1;
+
     if (playerWin && computerWin) {
-        document.getElementById('rollResult').innerText = `GAME OVER! in a draw???`;
+        document.getElementById('rollResult').innerText = `GAME OVER! It's a draw???`;
         return;
     }
     if (playerWin || computerWin) {
         document.getElementById('rollResult').innerText = `GAME OVER!`;
         return;
     }
+
     let playerTarget = playerPosition + roll1 + roll2;
-    let playerText = `You rolled a ${roll1} and a ${roll2} (Total: ${roll1 + roll2})`;
-    if (playerTarget > 100) {
-        playerTarget = 100 - (playerTarget - 100);
-    }
     let computerTarget = computerPosition + cRoll1 + cRoll2;
+
+    let playerText = `You rolled a ${roll1} and a ${roll2} (Total: ${roll1 + roll2})`;
     let computerText = `Computer rolled a ${cRoll1} and a ${cRoll2} (Total: ${cRoll1 + cRoll2})`;
+
+    // Require exact roll to win
+    if (playerTarget > 100) {
+        playerTarget = playerPosition;
+        playerText += ` You need exactly ${100 - playerPosition} to win.`;
+    }
     if (computerTarget > 100) {
-        computerTarget = 100 - (computerTarget - 100);
+        computerTarget = computerPosition;
+        computerText += ` Computer needs exactly ${100 - computerPosition} to win.`;
     }
 
     document.getElementById('rollResult').innerText = playerText + '\n' + computerText;
 
-    // Animate player movement (Copilot helped on the animation part)
+    // Animate player movement
     animateMovement(playerPosition, playerTarget, true, () => {
         playerPosition = playerTarget;
         if (playerPosition === 100) {
             playerWin = true;
             document.getElementById('rollResult').innerText += "\nYou Win!";
         }
-        // Store previous position before snake/ladder
+
         let prevPlayerPos = playerPosition;
         let playerEventMsg = '';
-        if ([4,10,28,36,99,87,80,20].includes(playerPosition)) {
-            prevPlayerPos = playerPosition;
+        if ([4, 10, 28, 36, 99, 87, 80, 20].includes(playerPosition)) {
             checkCurrentPosition();
             playerEventMsg = playerSnakeLadderText(prevPlayerPos);
         } else {
@@ -312,17 +318,18 @@ document.getElementById('rollBtn').addEventListener('click', () => {
         drawPlayer();
         drawComputer();
         updateScoreBoard();
-        // Animate computer movement after player
+
+        // Animate computer movement
         animateMovement(computerPosition, computerTarget, false, () => {
             computerPosition = computerTarget;
             if (computerPosition === 100) {
                 computerWin = true;
                 document.getElementById('rollResult').innerText += "\nComputer Wins!";
             }
+
             let prevCompPos = computerPosition;
             let computerEventMsg = '';
-            if ([4,10,28,36,99,87,80,20].includes(computerPosition)) {
-                prevCompPos = computerPosition;
+            if ([4, 10, 28, 36, 99, 87, 80, 20].includes(computerPosition)) {
                 checkCurrentPosition();
                 computerEventMsg = computerSnakeLadderText(prevCompPos);
             } else {
@@ -336,6 +343,7 @@ document.getElementById('rollBtn').addEventListener('click', () => {
         });
     });
 });
+
 
 resetGame();
 drawComputer();
