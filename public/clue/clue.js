@@ -9,11 +9,18 @@ const solution = {
     // suspect: suspects[Math.floor(Math.random() * suspects.length)],
     // weapon: weapons[Math.floor(Math.random() * weapons.length)],
     // room: rooms[Math.floor(Math.random() * rooms.length)]
-    suspect: "Miss Scarlett",
-    weapon: "Revolver",
-    room: "Study"
+    suspect: "Colonel Mustard",
+    weapon: "Dagger",
+    room: "Kitchen"
 };
 
+const cards = {
+    suspects: suspects.filter(s => s !== solution.suspect),
+    weapons: weapons.filter(w => w !== solution.weapon),
+    rooms: rooms.filter(r => r !== solution.room)
+};
+
+const diceRoll = () => Math.floor(Math.random() * 6) + 1;
 
 const boardLayout = [
     ['R0', 'H', 'R1', 'H', 'R2'], 
@@ -142,6 +149,21 @@ function makeSuggestion() {
         gameMessage.style.color = '#e74c3c'; 
     }
 }
+
+// function dealCards() {
+//     const playerCards = {
+//         suspects: [],
+//         weapons: [],
+//         rooms: []
+//     };
+
+//     // Deal one card from each category to the player
+//     playerCards.suspects.push(cards.suspects.pop());
+//     playerCards.weapons.push(cards.weapons.pop());
+//     playerCards.rooms.push(cards.rooms.pop());
+
+//     return playerCards;
+// };
 
 suggestButton.addEventListener('click', makeSuggestion);
 
