@@ -478,6 +478,9 @@ function handlePieceMovement(piece, doorway) {
                 default:
                     move = isSafe;
             }
+            if (move == cardDrawn) {
+                break;
+            }
             if (tempLocation == { x: 0, y: 0 }) {
                 tempLocation.x -= 1;
             } else if (tempLocation == { x: 0, y: 15 }) {
@@ -608,14 +611,14 @@ function checkIfSafe(piece, tempLocation, remainingMoves) {
                     }
                 }
             } else if (cardDrawn == "4") {
-                for (let i = 4; i >= 0; i--) {
+                for (let i = 0; i < 4; i++) {
                     if (tempLocation.x == 13 && tempLocation.y < 15 && tempLocation.y > 8) {
                         tempLocation.y += 1;
                     } else {
                         return i;
                     }
-                    if (i == 0) {
-                        return i;
+                    if (i == 3) {
+                        return 4;
                     }
                 }
             }
@@ -631,14 +634,14 @@ function checkIfSafe(piece, tempLocation, remainingMoves) {
                     }
                 }
             } else if (cardDrawn == "4") {
-                for (let i = 4; i >= 0; i--) {
+                for (let i = 0; i < 4; i++) {
                     if (tempLocation.x > 0 && tempLocation.y == 13 && tempLocation.x < 7) {
                         tempLocation.x -= 1;
                     } else {
                         return i;
                     }
-                    if (i == 0) {
-                        return i;
+                    if (i == 3) {
+                        return 4;
                     }
                 }
             }
@@ -654,14 +657,14 @@ function checkIfSafe(piece, tempLocation, remainingMoves) {
                     }
                 }
             } else if (cardDrawn == "4") {
-                for (let i = 4; i >= 0; i--) {
+                for (let i = 0; i < 4; i++) {
                     if (tempLocation.x < 15 && tempLocation.y == 2 && tempLocation.x > 8) {
                         tempLocation.x += 1;
                     } else {
                         return i;
                     }
-                    if (i == 0) {
-                        return i;
+                    if (i == 3) {
+                        return 4;
                     }
                 }
             }
@@ -677,14 +680,14 @@ function checkIfSafe(piece, tempLocation, remainingMoves) {
                     }
                 }
             } else if (cardDrawn == "4") {
-                for (let i = 4; i >= 0; i--) {
+                for (let i = 0; i < 4; i++) {
                     if (tempLocation.x == 2 && tempLocation.y > 0 && tempLocation.y < 7) {
                         tempLocation.y -= 1;
                     } else {
                         return i;
                     }
-                    if (i == 0) {
-                        return i;
+                    if (i == 3) {
+                        return 4;
                     }
                 }
             }
@@ -791,13 +794,13 @@ function clickedPiece(position) {
 function movesPossible() {
     let possible = false;
     for (let i = 0; i < pieceLocations[currentPlayer].length; i++) {
-        let xorP1 = (pieceLocations[currentPlayer][i].x != 0 && pieceLocations[currentPlayer][i].x != 15);
-        let xorP2 = (pieceLocations[currentPlayer][i].y != 0 && pieceLocations[currentPlayer][i].y != 15);
+        let insideP1 = (pieceLocations[currentPlayer][i].x != 0 && pieceLocations[currentPlayer][i].x != 15);
+        let insideP2 = (pieceLocations[currentPlayer][i].y != 0 && pieceLocations[currentPlayer][i].y != 15);
         const piece = { color: currentPlayer, index: i };
         if (pieceLocations[currentPlayer][i] == startLocations[currentPlayer] && (cardDrawn == "1" || cardDrawn == "2")) {
             possible = true;
             return possible;
-        } else if (pieceLocations[currentPlayer][i] != startLocations[currentPlayer] && (((xorP1 && !xorP2) || (!xorP1 && xorP2)))) {
+        } else if (pieceLocations[currentPlayer][i] != startLocations[currentPlayer] && !(insideP1 && insideP2)) {
             possible = true;
             return possible;
         } else if (checkIfSafePossibles(piece, cardDrawn)) {
