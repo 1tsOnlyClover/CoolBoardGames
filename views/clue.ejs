@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clue!</title>
+    <link rel="stylesheet" href="clueStyle.css">
+</head>
+<body>
+    <div id="nav-container">
+        <%- include('nav.ejs') %>
+    </div>
+    <div id="game-container">
+            <h1>Clue</h1>
+            <div class="game-rules">
+            <h2>Game Rules</h2>
+            <ul>
+                <li>Discover the murderer's true identity!</li>
+                <li> </li>
+                <li>It's trial and error to find the culprit.</li>
+                <li> </li>
+                <li>Click on a room to make a suggestion.</li>
+                <li> </li>
+                <li>You win when the killer is revealed!</li>
+            </ul>
+        </div>
+        <div id="clue-board">
+           
+        </div>
+        <div id="controls">
+            <h2>Current Location: <span id="current-location">Start</span></h2>
+            <h3>Make a Suggestion (only when in a room):</h3>
+            <select id="suspect-select"></select>
+            <select id="weapon-select"></select>
+            <select id="room-select" disabled></select> 
+            <button id="suggest-button" disabled>Suggest</button>
+            <button id="deal-cards-button">Deal Cards</button>
+            <!-- <button id="dice-roll-button">Dice Roll</button> -->
+            <p id="game-message"></p>
+        </div>
+    </div>
+
+    <script src="clue.js"></script>
+</body>
+</html>

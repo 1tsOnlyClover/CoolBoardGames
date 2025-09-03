@@ -99,6 +99,14 @@ app.get("/2048", (req, res) => {
 
 });
 
+app.get("/clue", (req, res) => {
+    // let model = {
+    //     similarGames: similarGames
+    // };
+    res.render("clue");
+
+});
+
 app.listen(port, () => {
     console.log("express listening at: http://localhost:" + port);
 });
